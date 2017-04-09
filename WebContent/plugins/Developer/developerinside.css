@@ -1,0 +1,64 @@
+.de-lb-selectproject{
+	margin-left: 5px;
+	margin-top: 40px;
+	color: black;
+}
+.de-dropdown{
+	margin-left: 40px;
+	margin-top: 40px;
+	width: 198px;
+}
+.de-lb-serch{
+	margin-left: 5px;
+	margin-top: 10px;
+}
+.de-lb-docname{
+	margin-left: 5px;
+	margin-top: 10px;
+}
+.de-tb-docname{
+	margin-left: 42px;
+	margin-top: 10px;
+	width: 198px;
+}
+.de-tb-serch{
+	margin-left: 12px;
+	margin-top: 10px;
+}
+.de-bt-download{
+	margin-left: 32px;
+	margin-top: 10px;
+	width: 100px;
+}
+.de-bt-serch{
+	margin-left: -18px;
+	margin-top: 10px;
+	height: 24px;
+	background-color: #0095cd;
+	border: none;
+	border-color: #0095cd:
+}
+.de-lb-takesummary{
+	margin-left: 5px;
+	margin-top: 10px;
+}
+.de-lb-pageno{
+	margin-left: 90px;
+	margin-top: 5px;
+}
+.de-tb-pagno{
+	margin-left: 10px;
+	margin-top: 5px;
+	width: 198px;
+}
+.de-bt-getsummary{
+	margin-left: 30px;
+	margin-top: 5px;
+}
+.de-ta-summary{
+	margin-left: 10px;
+	margin-top: 10px;
+	width: 480px;
+	height: 200px;
+	color: black;
+}

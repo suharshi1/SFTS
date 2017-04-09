@@ -1,0 +1,14 @@
+.cl-browse{
+	margin-left: 150px;
+	margin-top: -25px;
+	background-color: red;
+	width: 240px;
+	height: 20px;
+	text-align: center;
+	color: yellow;
+}
+.cl-submit{
+	margin-left: 220px;
+	margin-top: 30px;
+}
+

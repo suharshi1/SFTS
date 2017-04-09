@@ -1,0 +1,20 @@
+#progressBar {
+        width: 500px;
+        height: 20px;
+        border: 1px solid #111;
+        background-color: #fff;
+        float: left; margin-top: 15px;    margin-left: 200px;
+        visibility: hidden;
+        
+       
+}
+#progressBar div {
+        height: 100%;
+        color: #e80c4d;
+        text-align: right;
+        line-height: 7px; /* same as #progressBar height if we want text middle aligned */
+        width: 0;
+        background-color: #e80c4d; /* change this to change bar colour*/
+      
+}
+
