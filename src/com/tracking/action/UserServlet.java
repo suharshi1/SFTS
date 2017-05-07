@@ -6,10 +6,10 @@
 package com.tracking.action;
 
 import com.tracking.connectivity.*;
+import com.tracking.domain.User;
 import com.SFTS.Token.*;
-import com.tracking.entity.User;
-import com.utils.Constants;
-import com.utils.UserValidator;
+import com.tracking.utils.Constants;
+import com.tracking.utils.UserValidator;
 
 import java.io.IOException;
 import java.util.ArrayList;

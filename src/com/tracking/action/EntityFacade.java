@@ -15,9 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.tracking.connectivity.UserDAO;
+import com.tracking.domain.User;
 import com.SFTS.Token.MessageToken;
 import com.SFTS.Token.Token;
-import com.tracking.entity.User;
 
 
 public class EntityFacade extends HttpServlet {

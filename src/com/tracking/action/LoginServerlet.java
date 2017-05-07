@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import com.SFTS.Token.*;
 import com.tracking.connectivity.*;
-import com.tracking.entity.User;
+import com.tracking.domain.User;
 
 //@WebServlet(name = "Login", urlPatterns = {"/Login"})
 public class LoginServerlet extends HttpServlet 

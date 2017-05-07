@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.tracking.entity.User;
+import com.tracking.domain.User;
 
 
 
@@ -26,7 +26,7 @@ public class UserDAO {
         System.out.println("Connection @ UserDAO "+conn);
         User userdao = null;
         try {
-            String query = "select * from user where userName=? && password=?";
+            String query = "select * from user where userid=? && password=?";
             preparedStatement = conn.prepareStatement(query);
             System.out.println("preparedStatement @ UserDAO "+preparedStatement);
             System.out.println("getUserName @ UserDAO "+user.getUserName());
@@ -70,13 +70,15 @@ public class UserDAO {
         try {
           //  String query = "insert into user (userName, password, firstName, lastName, birthDate, gender, country, userImage) values(?,?,?,?,?,?,?,?)";
           
-        	String query = "insert into user (userName, password, firstName, lastName  ) values(?,?,?,? )";
+        	String query = "insert into user (userdid , userid, password, fName, lName, userrole_roledid  ) values(?,?,?,?,?, ?)";
                         
             preparedStatement = conn.prepareStatement(query);
-            preparedStatement.setString(1, user.getUserName());
-            preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setString(3, user.getFirstname());
-            preparedStatement.setString(4, user.getLastname());
+            preparedStatement.setInt(1, 1);
+            preparedStatement.setString(2, user.getUserName());
+            preparedStatement.setString(3, user.getPassword());
+            preparedStatement.setString(4, user.getFirstname());
+            preparedStatement.setString(5, user.getLastname());
+            preparedStatement.setInt(6, 1);
            /* preparedStatement.setString(5, user.getBirthdate());
             preparedStatement.setString(6, user.getGender());
             preparedStatement.setString(7, user.getCountry());

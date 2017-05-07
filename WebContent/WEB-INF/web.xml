@@ -24,7 +24,7 @@
    <!--  Login servlet  TODO:Rename later -->
   <servlet>
         <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>com.SFTS.Servlet.Login</servlet-class>
+        <servlet-class>com.tracking.action.LoginServerlet</servlet-class>
         <!--List all the component's struts-config files-->
         <init-param>
             <param-name>config</param-name>
@@ -50,7 +50,7 @@
   
   <servlet>
         <servlet-name>UserServlet</servlet-name>
-        <servlet-class>com.SFTS.Servlet.UserServlet</servlet-class>
+        <servlet-class>com.tracking.action.UserServlet</servlet-class>
         <!--List all the component's struts-config files-->
         <init-param>
             <param-name>config</param-name>

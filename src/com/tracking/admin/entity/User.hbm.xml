@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.tracking.admin.entity">
+    <class name="User" table="USER">
+        <id name="userDid" column="userdid">
+            <generator class="increment"/>
+        </id>
+        <property name="userId" type="string" column="userId"/>
+        <property name="email"/>
+        <property name="password"/>
+        <property name="telephone"/>
+         
+    </class>
+</hibernate-mapping>
