@@ -1,12 +1,16 @@
-package com.tracking.admin.entity;
+package net.hibernate.user;
 
-import java.io.Serializable;
-import java.util.Date;
 
-public class User implements Serializable {
-	
-	private static final long serialVersionUID = 7285707373715413075L;
-	
+
+import java.sql.Date;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name="user")
+public class User {
+
+
 	private int userDid ;
 	private String userId;
 	private String password;
@@ -17,9 +21,12 @@ public class User implements Serializable {
 	private String street;
 	private String city;
 	private int userrole_roledid;
-	private Date birthDate;
+	private Date dateofbirth;
 	private String contactNumber;
 	private String email;
+	
+	@Id
+	@Column(name="userdid")
 	public int getUserDid() {
 		return userDid;
 	}
@@ -80,11 +87,11 @@ public class User implements Serializable {
 	public void setUserrole_roledid(int userrole_roledid) {
 		this.userrole_roledid = userrole_roledid;
 	}
-	public Date getBirthDate() {
-		return birthDate;
+	public Date getDateofbirth() {
+		return dateofbirth;
 	}
-	public void setBirthDate(Date birthDate) {
-		this.birthDate = birthDate;
+	public void setDateofbirth(Date dateofbDate) {
+		this.dateofbirth = dateofbDate;
 	}
 	public String getContactNumber() {
 		return contactNumber;
@@ -98,21 +105,7 @@ public class User implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-	
-	@Override
-	public String toString() {
-		return "User [userDid=" + userDid + ", userId=" + userId + ", fName="
-				+ fName + ", lName=" + lName + ", userrole_roledid="
-				+ userrole_roledid + "]";
-	}
-	
-	
-	
-	
-	
-	
 
+	
+	
 }

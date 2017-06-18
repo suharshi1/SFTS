@@ -1,19 +1,32 @@
 package com.tracking.domain;
 
-public class User {
+import java.io.Serializable;
 
-    private int userId;
+public class User implements Serializable{
+
+	private static final long serialVersionUID = 6025244324911937335L;
+
+	private int userId;
     private String userName;
     private String password;
-    private String firstname;
-    private String lastname;
-    private String birthdate;
+    private String firstName;
+    private String lastName;
+    private String birthDate;
     private String gender;
     private String country;
     private String userImage;
-    private String address ;
-    private String dob;
+    private String address1 ;
+    private String dateOfBirth;
+    private String contactNumber;
     private String email;
+    private String address2;
+    private String street;
+    private String city;
+    private String zipCode;
+    private int role;
+    
+    private Device userDevice;
+    
     
     
     public User(){
@@ -49,30 +62,6 @@ public class User {
 		this.password = password;
 	}
 
-	public String getFirstname() {
-		return firstname;
-	}
-
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
-
-	public String getLastname() {
-		return lastname;
-	}
-
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
-	}
-
-	public String getBirthdate() {
-		return birthdate;
-	}
-
-	public void setBirthdate(String birthdate) {
-		this.birthdate = birthdate;
-	}
-
 	public String getGender() {
 		return gender;
 	}
@@ -97,20 +86,12 @@ public class User {
 		this.userImage = userImage;
 	}
 
-	public String getAddress() {
-		return address;
+	public String getDateOfBirth() {
+		return dateOfBirth;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getDob() {
-		return dob;
-	}
-
-	public void setDob(String dob) {
-		this.dob = dob;
+	public void setDateOfBirth(String dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
 	}
 
 	public String getEmail() {
@@ -119,6 +100,112 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}	
+
+	public String getFirstName() {
+		return firstName;
 	}
-		
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getBirthDate() {
+		return birthDate;
+	}
+
+	public void setBirthDate(String birthDate) {
+		this.birthDate = birthDate;
+	}
+	
+	public String getContactNumber() {
+		return contactNumber;
+	}
+
+	public void setContactNumber(String contactNumber) {
+		this.contactNumber = contactNumber;
+	}	
+	
+	public String getAddress1() {
+		return address1;
+	}
+
+	public void setAddress1(String address1) {
+		this.address1 = address1;
+	}
+
+	public String getAddress2() {
+		return address2;
+	}
+
+	public void setAddress2(String address2) {
+		this.address2 = address2;
+	}
+
+	public String getStreet() {
+		return street;
+	}
+
+	public void setStreet(String street) {
+		this.street = street;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getZipCode() {
+		return zipCode;
+	}
+
+	public void setZipCode(String zipCode) {
+		this.zipCode = zipCode;
+	}
+	
+	
+
+	public int getRole() {
+		return role;
+	}
+
+	public void setRole(int role) {
+		this.role = role;
+	}
+
+	public Device getUserDevice() {
+		return userDevice;
+	}
+
+	public void setUserDevice(Device userDevice) {
+		this.userDevice = userDevice;
+	}
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", userName=" + userName
+				+ ", password=" + password + ", firstName=" + firstName
+				+ ", lastName=" + lastName + ", birthDate=" + birthDate
+				+ ", gender=" + gender + ", country=" + country
+				+ ", userImage=" + userImage + ", address1=" + address1
+				+ ", dateOfBirth=" + dateOfBirth + ", contactNumber="
+				+ contactNumber + ", email=" + email + ", address2=" + address2
+				+ ", street=" + street + ", city=" + city + ", zipCode="
+				+ zipCode + "]";
+	}
+
+
+
+	
 }

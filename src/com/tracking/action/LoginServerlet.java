@@ -13,8 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.SFTS.Token.*;
+import com.tracking.token.*;
+import com.tracking.utils.SFTSUtil;
+import com.tracking.utils.UserRole;
 import com.tracking.connectivity.*;
+import com.tracking.domain.Device;
 import com.tracking.domain.User;
 
 //@WebServlet(name = "Login", urlPatterns = {"/Login"})
@@ -32,43 +35,62 @@ public class LoginServerlet extends HttpServlet
 
         User user = new User(userName , password);
         
-    /*   String strObject = request.getParameter("data");
+        System.out.println("userName "+userName+ "  password "+password);
+        
+    /*   
+     	String strObject = request.getParameter("data");
         Gson gson = Converters.registerLocalDateTime(new GsonBuilder()).create();
-        User user = gson.fromJson(strObject, User.class);*/
-        if (userName == null ) 
-        {
-            HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-        //   httpServletResponse.sendRedirect(request.getServletContext().getContextPath() + "/Map1.jsp");
+        User user = gson.fromJson(strObject, User.class);
+        
+    */
+        if (userName == null || password == null ) 
+        {           
+            response.sendRedirect(request.getContextPath()  + "/Map1.jsp");
         } 
         else 
         {
             try 
             {
-              
-				User user1 = new UserDAO().login(user);
-				System.out.println("Login .... else user1"+user1);
+            	UserDAO userDAO =  new UserDAO();
+				User user1 = userDAO.login(user);
+				System.out.println("Login ....  user1 "+user1);
 				
 				if (user1 != null) {
                     HttpSession httpSession = request.getSession(true);
                     httpSession.setAttribute("userSession", user1);
                     httpSession.setAttribute("user_name", user1.getUserName());
-                    httpSession.setAttribute("first_name", user1.getFirstname());
-                    httpSession.setAttribute("last_name", user1.getLastname());
-                    httpSession.setAttribute("birth_date", user1.getBirthdate());
+                    httpSession.setAttribute("first_name", user1.getFirstName());
+                    httpSession.setAttribute("last_name", user1.getLastName());
+                    httpSession.setAttribute("birth_date", user1.getBirthDate());
                     httpSession.setAttribute("country", user1.getCountry());
                     httpSession.setAttribute("gender", user1.getGender());
                     httpSession.setAttribute("user_image", user1.getUserImage());
+                    httpSession.setAttribute("userrole_roledid", user1.getRole());
                     httpSession.setMaxInactiveInterval(720000);
 
-                    System.out.println(" LOGIN FACADE " + user1.getCountry());
-
-                    List<UserServlet> tempUserList = new ArrayList<UserServlet>();
-                    token = new PayloadListToken(tempUserList);
-                    token.setCode(Token.SUCCESS);
-                    token.setMessage("Login success !");
-                    System.out.println(" Token LOGIN FACADE " + token.getCode());
-                    HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-               //     httpServletResponse.sendRedirect(request.getServletContext().getContextPath() + "/Map1.jsp");
+                    if(user1.getRole() == UserRole.ADMIN.getRoleDid()){
+                    	
+                    	// populate all users to populate in the table
+                    	ArrayList<User> userList = userDAO.getAvailableUsers();
+                    	System.out.println("all users @ login user page "+userList);
+                    	if(SFTSUtil.isNotEmpty(userList)){
+                    		httpSession.setAttribute("allUsers", userList);
+                    	}
+                    
+                    	// populate all users to populate in the table
+                    	DeviceDAO deviceDAO = new DeviceDAO();
+                    	ArrayList<Device> deviceList = deviceDAO.getAvailableDevices();
+                    	System.out.println(" all devices @ login user page "+deviceList);
+                    	if(SFTSUtil.isNotEmpty(deviceList)){
+                    		httpSession.setAttribute("allDevices", deviceList);
+                    	}
+                    
+                    }
+                  
+                    
+                    httpSession.setAttribute("currentUser", user1);                    
+                              
+                    response.sendRedirect(request.getContextPath() + "/Map1.jsp");
                 } 
                 else 
                 {
@@ -76,6 +98,7 @@ public class LoginServerlet extends HttpServlet
                     token.setCode(Token.UNAUTHORIZED);
                     token.setMessage("Login failed");
                     System.out.println("PM LOGIN FACADE " + token.getCode());
+                    response.sendRedirect(request.getContextPath() + "/login.jsp");
                 }
             } 
             catch (NumberFormatException ex) 
@@ -84,13 +107,20 @@ public class LoginServerlet extends HttpServlet
                 token = new MessageToken();
                 token.setCode(Token.UNAUTHORIZED);
                 token.setMessage("Login failed");
+                response.sendRedirect(request.getContextPath() + "/login.jsp");
+            }catch(Exception e )
+            {
+            	 Logger.getLogger(LoginServerlet.class.getName()).log(Level.WARNING, null, e);
+                 token = new MessageToken();
+                 token.setCode(Token.UNAUTHORIZED);
+                 token.setMessage("Login failed");
+                 response.sendRedirect(request.getContextPath() + "/login.jsp");
             }
-
-            response.setContentType("applicaton/json;charset=UTF-8");
+    //        response.setContentType("applicaton/json;charset=UTF-8");
             //nee d try-carch
-            PrintWriter out = response.getWriter();
+     //       PrintWriter out = response.getWriter();
        //     gson.toJson(token, out);
-            out.flush();
+    //        out.flush();
 
         }
     }

@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<%@page import="com.tracking.domain.Device"%>
+<%@page import="java.util.ArrayList"%>
 <html>
 <head>
   <meta charset="utf-8">
@@ -295,7 +297,7 @@
             <div class="icon">
               <i class="ion ion-bag"></i>
             </div>
-            <a href="#" class="small-box-footer"><i class="fa fa-arrow-circle-right"></i></a>
+            <a href="addDevice.jsp" class="small-box-footer"><i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <!-- ./col -->
@@ -310,7 +312,7 @@
             <div class="icon">
               <i class="ion ion-stats-bars"></i>
             </div>
-            <a href="#" class="small-box-footer"><i class="fa fa-arrow-circle-right"></i></a>
+            <a href="updateDevice.jsp" class="small-box-footer"><i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <!-- ./col -->
@@ -325,7 +327,7 @@
             <div class="icon">
               <i class="ion ion-person-add"></i>
             </div>
-            <a href="#" class="small-box-footer"> <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="deleteDevice.jsp" class="small-box-footer"> <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <!-- ./col -->
@@ -340,11 +342,72 @@
             <div class="icon">
               <i class="ion ion-pie-graph"></i>
             </div>
-            <a href="#" class="small-box-footer"> <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="searchDevice.jsp" class="small-box-footer"> <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
+        
         <!-- ./col -->
       </div>
+    <!--  All users table row -->
+      <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">Device</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>Device ID</th>
+                  <th>IMEI</th>
+                  <th>Description</th>
+                </tr>
+                </thead>
+                <tbody>
+               
+                 <% 
+               		// this is a scriplet 
+               		/*
+               		users list which is retrieved from the back end */
+               		ArrayList <Device> deviceList = (ArrayList) request.getSession().getAttribute("allDevices");
+	                if(deviceList != null){
+	                	for( Device device : deviceList ){
+	                    	
+               		
+               			
+               		
+               		
+               %>
+               
+         
+               <tr>
+                <input type="hidden"  > </input>
+                  <td><%=device.getDeviceId()%></td>
+                  <td><%=device.getDescription()%> </td>
+                  <td><%=device.getImei()%> </td>
+
+                </tr>
+                
+                
+                <%
+	                	}
+	               }	  // end of for loop which iterates the users list
+                %>
+                
+               
+                </tbody>
+                <tfoot>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+
+                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
       <!-- /.row -->
       <!-- Main row -->
       <div class="row">

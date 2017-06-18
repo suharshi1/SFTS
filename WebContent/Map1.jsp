@@ -1,6 +1,14 @@
+<%@ page language="java" contentType="text/html; charset=US-ASCII"
+    pageEncoding="US-ASCII"%>
+
 <!DOCTYPE html>
 <html>
+
+<%@ page import="java.util.ArrayList"%>
+<%@page import="com.tracking.domain.User"%>
 <head>
+
+
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Admin| Dashboard</title>
@@ -48,10 +56,44 @@
 		} 	
 		
 	} 
+	
+	/*
+	
+	google.load('visualization', '1', { 'packages': ['geomap'] });
+    google.setOnLoadCallback(drawMap);
+
+    function drawMap() {
+        var data = google.visualization.arrayToDataTable([
+          ['City', 'Popularity'],
+          ['New York', 200],
+          ['Boston', 300],
+          ['Miami', 400],
+          ['Chicago', 500],
+          ['Los Angeles', 600],
+          ['Houston', 700]
+        ]);
+
+        var options = {};
+        options['region'] = 'US';
+        options['colors'] = [0xFF8747, 0xFFB581, 0xc06000]; //orange colors
+        options['dataMode'] = 'markers';
+        options['width'] = '556px';
+
+        var container = document.getElementById('map_canvas');
+        var geomap = new google.visualization.GeoMap(container);
+        geomap.draw(data, options);
+    };
+	
+	*/
+	
 </script>
 </head>
 <body onload="load()" class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
+
+<%
+
+%>
 
   <header class="main-header">
     <!-- Logo -->
@@ -323,7 +365,7 @@
             <div class="icon">
               <i class="ion ion-person-add"></i>
             </div>
-            <a href="#" class="small-box-footer"> <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="deleteUser.jsp" class="small-box-footer"> <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <!-- ./col -->
@@ -338,11 +380,76 @@
             <div class="icon">
               <i class="ion ion-pie-graph"></i>
             </div>
-            <a href="#" class="small-box-footer"> <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="searchUser.jsp" class="small-box-footer"> <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <!-- ./col -->
       </div>
+      <%
+     	ArrayList<User> users = (ArrayList<User>)session.getAttribute("allUsers");
+     
+      %>
+      
+      
+      <!--  
+      <c:forEach items="${allUsers}" var="user">
+				    <tr>
+				        <td> <c:out value="${user.userName}"/></td>
+				        <td> <c:out value="${user.address1}"/></td> 
+				        
+				        <td>Trident</td>
+		                <td>Internet Explorer 4.0 </td>
+		                <td>Win 95+</td>
+                
+				    </tr>
+				</c:forEach>
+       -->
+      <!--  All users table row -->
+      <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">Users</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>User Name</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Address</th>
+                  <th>Street</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% for (User user : users){  %>
+                
+                
+                <tr>
+                  <td><%=user.getUserName() %> </td>
+	                <td><%=user.getFirstName() %> </td>
+	                <td><%=user.getLastName() %> </td>
+	                <td><%=user.getAddress1() %> </td>
+	                <td><%=user.getStreet() %> </td>
+                
+                </tr>
+                
+                <% 
+                }
+                %>
+                
+              
+                </tbody>
+                <tfoot>
+               
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+      
+      <!--   -->
+      
       <!-- /.row -->
       <!-- Main row -->
       <div class="row">

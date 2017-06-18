@@ -132,8 +132,8 @@
                 <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                 <p>
-                  Prageeth Nimshan - Web Developer
-                  <small>Member since Nov. 2012</small>
+                  Suwimali Bandara - Web Developer
+                  <small>Member since Nov. 2008</small>
                 </p>
               </li>
               <!-- Menu Body -->
@@ -355,10 +355,24 @@
                   
                
                   <div class="form-group">
-                    <label for="inputExperience" class="col-sm-2 control-label">Address</label>
+                    <label for="inputAddress" class="col-sm-2 control-label">Address</label>
 
                     <div class="col-sm-10">
                       <input type="text" class="form-control" id="inputAddress"  name="inputAddress"  placeholder="Address">
+                    </div>
+                   </div>
+                   
+                   <div class="form-group">
+                    <label for="inputStreet" class="col-sm-2 control-label">Street</label>
+						<div class="col-sm-10">
+                      <input type="text" class="form-control" id="inputStreet"  name="inputStreet"  placeholder="Street">
+                    </div>
+                   </div>
+                   
+                   <div class="form-group">
+                    <label for="inputCity" class="col-sm-2 control-label">City</label>
+						<div class="col-sm-10">
+                      <input type="text" class="form-control" id="inputCity"  name="inputCity"  placeholder="City">
                     </div>
                    </div>
                    
@@ -374,7 +388,13 @@
                     <label for="inputSkills" class="col-sm-2 control-label">Role</label>
 
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputRole" name="inputRole"  placeholder="Role">
+                      <!--  <input type="text" class="form-control" id="inputRole" name="inputRole"  placeholder="Role">  -->
+                      
+                      <select class="form-control select1"  style="width: 100%;">
+                       	  <option value="-1">-- Select -- </option>
+		                  <option value="1">Admin</option>
+		                  <option value="2">Sales Executive</option>		                 
+	                  </select>
                     </div>
                   </div>
                   
@@ -407,7 +427,7 @@
                     <label for="inputName" class="col-sm-2 control-label">Password</label>
 
                     <div class="col-sm-10">
-                      <input type="password" name="password" class="form-control" placeholder="Password">
+                      <input type="password" name="password" id="password" class="form-control" placeholder="Password">
                     </div>
                   </div>
                   
@@ -421,11 +441,11 @@
                       </div>
                     </div>
                   </div>
-                    <input type="hidden" id="actionCommand" name ="actionCommand" value="addUser">
                     
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                      <button type="submit" name="addUser" id ="addUser"  class="btn btn-danger">Submit</button>
+                    	<input type="hidden" name="user_command" id="user_command" value="addUser"></input>
+                      <button type="submit" name="addUser" id ="addUser"  class="btn btn-success">Submit</button>
                     </div>
                   </div>
                   

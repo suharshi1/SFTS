@@ -14,10 +14,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.tracking.token.MessageToken;
+import com.tracking.token.Token;
 import com.tracking.connectivity.UserDAO;
 import com.tracking.domain.User;
-import com.SFTS.Token.MessageToken;
-import com.SFTS.Token.Token;
 
 
 public class EntityFacade extends HttpServlet {

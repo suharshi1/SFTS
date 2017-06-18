@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<%@page import="com.tracking.domain.User"%>
-<%@page import="java.util.ArrayList"%>
 <html>
 <head>
   <meta charset="utf-8">
@@ -51,35 +49,6 @@
 		
 	} 
 </script>
-
-
-<%
-int userDid = -1 ; 
-User user = (User) session.getAttribute("searchedUser");
-String firstName = "";
-String lastName = "";
-String address = "";
-String mobileNumber = "";	
-String userName = "";
-String dob = "";
-String email = "";
-String password = "";
-
-if (user != null ){
-	
-	firstName =  user.getFirstName() == null ? "" : user.getFirstName() ;
-	lastName = user.getLastName() == null ? "" : user.getLastName();
-	address = user.getAddress1() == null ? "" : user.getAddress1() ;
-	mobileNumber = user.getContactNumber() == null ? "" : user.getContactNumber() ;
-	userName = user.getUserName() == null ? "" : user.getUserName() ;
-	dob = user.getDateOfBirth() == null ? "" : user.getDateOfBirth();
-	email = user.getEmail() == null ? "" : user.getEmail()  ;
-	password = user.getPassword()  == null ? "" : user.getPassword() ;
-	userDid = user.getUserId();
-}
-
-%>
-
 </head>
 <body onload="load()" class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -90,7 +59,7 @@ if (user != null ){
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>A</b>LT</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>Admin</b>LTE</span>
+      <span class="logo-lg"><b>SFTS</b>SFTS</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -155,7 +124,7 @@ if (user != null ){
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-              <span class="hidden-xs">Alexander Pierce</span>
+              <span class="hidden-xs">Prageeth Nimshan</span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
@@ -163,8 +132,8 @@ if (user != null ){
                 <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                 <p>
-                  Alexander Pierce - Web Developer
-                  <small>Member since Nov. 2012</small>
+                  Suwimali Bandara - Web Developer
+                  <small>Member since Nov. 2008</small>
                 </p>
               </li>
               <!-- Menu Body -->
@@ -211,7 +180,7 @@ if (user != null ){
           <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>Alexander Pierce</p>
+          <p>Prageeth Nimshan</p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
@@ -231,31 +200,25 @@ if (user != null ){
         <li class="header">MAIN NAVIGATION</li>
          <li class="treeview">
          
+         <li>
           <a href="Map1.jsp">
-            <i class="fa fa-files-o"></i>
-            <span>Manage Users</span>
-            <span class="label label-primary pull-right">4</span>
-          </a>
-        </li>
-        <li>
-          <a href="ManageDevice.jsp">
-            <i class="fa fa-th"></i> <span>Manage Device</span>
-            <small class="label pull-right bg-green">new</small>
+            <i class="fa fa-th"></i> <span>Manage User</span>
+            <small class="label pull-right bg-green"></small>
           </a>
         </li>
         
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-pie-chart"></i>
-            <span>Add Land Marks</span>
-            <i class="fa fa-angle-left pull-right"></i>
+        <li>
+          <a href="ManageDevice.jsp">
+            <i class="fa fa-th"></i> <span>Manage Device</span>
+            <small class="label pull-right bg-green"></small>
           </a>
-          <ul class="treeview-menu">
-            <li><a href="pages/charts/chartjs.html"><i class="fa fa-circle-o"></i>Device 1</a></li>
-            <li><a href="pages/charts/morris.html"><i class="fa fa-circle-o"></i> Device 2</a></li>
-            <li><a href="pages/charts/flot.html"><i class="fa fa-circle-o"></i> Device 3</a></li>
-            <li><a href="pages/charts/inline.html"><i class="fa fa-circle-o"></i>Device 4</a></li>
-          </ul>
+        </li>
+        
+        <li>
+          <a href="addLandMarks.jsp">
+            <i class="fa fa-th"></i> <span>Add Landmarks</span>
+            <small class="label pull-right bg-green"></small>
+          </a>
         </li>
         
         <li class="treeview">
@@ -299,12 +262,12 @@ if (user != null ){
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Update User
+        Delete Device
       </h1>
       <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Manage User</a></li>
-        <li><a href="#">Update</a></li>
-        <li class="active">User profile</li>
+        <li><a href="#"><i class="fa fa-dashboard"></i> Manage Device</a></li>
+        <li><a href="#">Delete</a></li>
+        <li class="active">Device Profile</li>
       </ol>
     </section>
 
@@ -314,175 +277,71 @@ if (user != null ){
       <div class="row">
         <div class="col-md-3">
 
-          <!-- Profile Image -->
-          <div class="box box-primary">
-            <div class="box-body box-profile">
-              <img class="profile-user-img img-responsive img-circle" src="dist/img/avatar04.png" alt="User profile picture">
+         <!-- Profile Image -->
+          <div class="">
+   
 
-              <h3 class="profile-username text-center"> </h3>
-
-              <p class="text-muted text-center">Sales Person</p>
-
-              <a href="#" class="btn btn-primary btn-block"><b>Assign</b></a>
+              
             </div>
             <!-- /.box-body -->
           </div>
           <!-- /.box -->
 
           <!-- About Me Box -->
-          <div class="box box-primary">
-            <div class="box-header with-border">
-              <h3 class="box-title">About Me</h3>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-              <strong><i class="fa fa-book margin-r-5"></i> Education</strong>
-
-              <p class="text-muted">
-                
-              </p>
-
-              <hr>
-
-              <strong><i class="fa fa-map-marker margin-r-5"></i> Address</strong>
-
-              <p class="text-muted"><%=address%></p>
-
-              <hr>
-
-              <strong><i class="fa fa-pencil margin-r-5"></i> Skills</strong>
-
-              <p>
-                <span class="label label-danger"></span>
-                <span class="label label-success"></span>
-                <span class="label label-info"></span>
-                <span class="label label-warning"></span>
-                <span class="label label-primary"></span>
-              </p>
-
-              <hr>
-
-              <strong><i class="fa fa-file-text-o margin-r-5"></i> Notes</strong>
-
-              <p></p>
-            </div>
+          <div class="">
+          
+           
             <!-- /.box-body -->
           </div>
           <!-- /.box -->
         </div>
         <!-- /.col -->
-      
         
-        
-        <div class="col-md-9">
+        <div class="col-md-10">
           <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-              <li class="active"><a href="#settings" data-toggle="tab">Update</a></li>
+              <li class="active"><a href="#settings" data-toggle="tab">Delete</a></li>
             </ul>
-            <div class="tab-content">
+            
+           <div class="tab-content">
               <div class="active tab-pane" id="settings">
-               
-               <form class="form-horizontal"  action ="user" method = "POST" >
+            
+                <form class="form-horizontal"  action ="user" method = "POST" >
                		<input type="hidden" name="user_command" id="user_command" value="searchUser"></input>
 	             	  <div class="form-group form-group-sm">
 	                    <label for="inputName" class="col-sm-2 control-label">User Name</label>
 	                    <div class="col-sm-10">
 	                      	<div class="input-group ">
-	                    		<input type="text" class="form-control" id="searchName" name="searchName" value="<%=userName%>" placeholder="User Name" />
+	                    		<input type="text" class="form-control" id="searchName" name="searchName" placeholder="User Name" />
 					      			<span class="input-group-btn">
 					        		<button class="btn btn-sm" type="submit">Go!</button>
 					      			</span>
 					    	</div><!-- /input-group -->
 	                    </div><!-- /col-sm-10 -->                    
 	                  	</div>               
-               </form> <!-- end  search form  -->
-             
-               <hr>
-               
-                <form class="form-horizontal"  action ="user" method = "POST" >
-                
-                  <input type="hidden" name="user_command" id="user_command" value="updateUser"></input>
-                  <input type="hidden" name="userDid" id="userDid" value="<%=userDid%>"></input>
-                   <div class="form-group">
-                    <label for="inputName" class="col-sm-2 control-label">Name</label>
-
-                    <div class="col-sm-10">
-                      <input type="text" class="form-control" name="inputFName" id="inputFName" placeholder="First Name" value="<%=firstName%>" />
-                    </div>                    
-                  </div>
-                  
-                  
+              
+                         
+        
                   <div class="form-group">
-                    <label for="inputName" class="col-sm-2 control-label"></label>
+                    <label for="inputName" class="col-sm-2 control-label">IMEI</label>
 
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" name="inputLName" id="inputLName" placeholder="Last Name" value="<%=lastName%>" />
-                    </div>                    
+                      <input type="text" class="form-control" id="IMEI"  name="IMEI" placeholder="IMEI">
+                    </div>
+                    
                   </div>
+                 
                   
                
                   <div class="form-group">
-                    <label for="inputExperience" class="col-sm-2 control-label">Address</label>
+                    <label for="inputAddress" class="col-sm-2 control-label">Description</label>
 
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputAddress" name="inputAddress"  placeholder="Address" value="<%=address%>"  />
+                      <input type="text" class="form-control" id="Description"  name="Description"  placeholder="Description">
                     </div>
                    </div>
                    
-                   <div class="form-group">
-                    <label for="inputSkills" class="col-sm-2 control-label">Date of Birth</label>
-
-                    <div class="col-sm-10">
-                      <input type="text" class="form-control" name="inputDoB" id="inputDoB" placeholder="DD/MM/YYYY"  value="<%=dob%>" />
-                    </div>
-                  </div>
                   
-                  <div class="form-group">
-                    <label for="inputSkills" class="col-sm-2 control-label">Role</label>
-
-                    <div class="col-sm-10">
-                 <!--  <input type="text" class="form-control" name="inputRole" id="inputRole" placeholder="Role">  -->    
-                      
-                      
-                      <select class="form-control select1" name ="roleUser" id ="roleUser" style="width: 100%;">
-                       	  <option value="-1">-- Select -- </option>
-		                  <option value="1">Admin</option>
-		                  <option value="2">Sales Executive</option>		                 
-	                  </select>
-                    </div>
-                  </div>
-                  
-                    <div class="form-group">
-                    <label for="inputSkills" class="col-sm-2 control-label">Contact No</label>
-
-                    <div class="col-sm-10">
-                      <input type="text" class="form-control" name="inputContactNo" id="inputContactNo" placeholder="Contact Number" value="<%=mobileNumber%>" >
-                    </div>
-                  </div>
-                  
-                     <div class="form-group">
-                    <label for="inputEmail" class="col-sm-2 control-label">Email</label>
-
-                    <div class="col-sm-10">
-                      <input type="email" class="form-control" name="inputEmail" id="inputEmail" value="<%=email%>" placeholder="Email">
-                    </div>
-                  </div>
-                  
-                   <div class="form-group">
-                    <label for="inputUserName" class="col-sm-2 control-label">User Name</label>
-
-                    <div class="col-sm-10">
-                      <input type="text" name="userName" id="userName" class="form-control" value="<%=userName%>" placeholder="User Name">
-                    </div>
-                  </div>
-                  
-                  <div class="form-group">
-                    <label for="inputName" class="col-sm-2 control-label">Password</label>
-
-                    <div class="col-sm-10">
-                      <input type="password" name="password" id="password" class="form-control" value="<%=password%>" placeholder="Password">
-                    </div>
-                  </div>
                   
                   
                   <div class="form-group">
@@ -494,15 +353,17 @@ if (user != null ){
                       </div>
                     </div>
                   </div>
-                  <div class="form-group">
+                    <input type="hidden" id="actionCommand" name ="actionCommand" value="updateDevice">
+                    
+                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                    	<input type="hidden" name="user_command" id="user_command" value="updateUser"></input>
-                      	<button type="submit" name="updateUser" id ="updateUser"  class="btn btn-success">Submit</button>
+                     <input type="hidden" name="user_command" id="user_command" value="delete"></input>
+                      <button type="submit" name="addUser" id ="addUser"  class="btn btn-danger">Delete</button>
                     </div>
                   </div>
                   
                   
-              </form> <!-- searchUser form -->
+                   </form>
                   
               
               </div>
@@ -744,3 +605,4 @@ if (user != null ){
 
 
 </html>
+l>
