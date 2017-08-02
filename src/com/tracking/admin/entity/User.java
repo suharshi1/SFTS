@@ -23,9 +23,9 @@ public class User implements Serializable {
 	public int getUserDid() {
 		return userDid;
 	}
-	public void setUserDid(int userDid) {
+	/*public void setUserDid(int userDid) {
 		this.userDid = userDid;
-	}
+	}*/
 	public String getUserId() {
 		return userId;
 	}

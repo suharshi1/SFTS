@@ -93,7 +93,7 @@
 <script src="plugins/iCheck/icheck.min.js"></script>
 
 
-</script>
+
 <script>
   $(function () {
     $('input').iCheck({

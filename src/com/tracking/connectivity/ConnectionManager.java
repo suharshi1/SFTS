@@ -11,7 +11,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-
+import com.mysql.jdbc.Driver;
 import com.mysql.jdbc.Statement;
 
 /**
@@ -19,82 +19,80 @@ import com.mysql.jdbc.Statement;
  */
 public class ConnectionManager {
 
-    private static  DataSource dataSource;
-    
-    
-    private static Connection connection ;
-    private Statement stmnt ;
-    private ResultSet rst ;
-    
-    private final static String CONNECTION_URL = "jdbc:mysql://localhost:3306/sfts?autoReconnect=true&useSSL=false";
-    private final static String USERNAME = "root";
-    private final static String PASSWORD = "root";
-    
-    private static ConnectionManager instance ;
-    
-    
-    private ConnectionManager(){
-    	
-    }
-    
-    public static ConnectionManager getInstance(){
-    	if (instance == null ){
-    		instance = new ConnectionManager();
-    	}
-    	return instance ;
-    }
+	private static DataSource dataSource;
 
-   
-    private static void initialize(){
-    	 try {
-   			Class.forName("com.mysql.jdbc.Driver");
-      	 }catch (ClassNotFoundException cnfex){
-      		 System.out.println("Driver Class not found  ");
-      	 }
-      	 try{
-   	        connection = DriverManager.getConnection(CONNECTION_URL,USERNAME, PASSWORD);
-   	        System.out.println("connection established "+connection);
-           
-           } catch (Exception e) {
-          	 System.out.println("Could not establish the connection ");
-               
-   		}
-    }
+	private static Connection connection;
+	private Statement stmnt;
+	private ResultSet rst;
 
-    /**
-     * Gets the connection.
-     *
-     * @return the connection
-     */
-    public Connection getConnection() throws SQLException {
-    	System.out.println("getConnection() ==== "+connection);
-    	if (connection == null || connection.isClosed()){
-    	   initialize();
-    	}
-    	return connection;
-    }
+	private final static String CONNECTION_URL = "jdbc:mysql://localhost:3306/sfts?autoReconnect=true&useSSL=false";
+	private final static String USERNAME = "root";
+	private final static String PASSWORD = "root";
 
-    /**
-     * Close the connection
-     *
-     * @param connection the connection
-     */
-    public static void close(Connection connection) {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                Logger.getLogger(ConnectionManager.class.getName()).log(
-                        Level.SEVERE, null, e);
-            }
-        }
-    }
+	private static ConnectionManager instance;
 
-    
-    public static void main (String[] args){
-    	
-    
-    	
-    }
-    
+	private ConnectionManager() {
+
+	}
+
+	public static ConnectionManager getInstance() {
+		if (instance == null ) {
+			instance = new ConnectionManager();
+		}
+		return instance;
+	}
+
+	private static void initialize() {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			System.out.println("Driver class loaded successfully");
+		} catch (ClassNotFoundException cnfex) {
+			System.err.println("Driver Class not found  ");
+			cnfex.printStackTrace();
+		}
+		try {
+			connection = DriverManager.getConnection(CONNECTION_URL, USERNAME, PASSWORD);
+			System.out.println("connection established " + connection);
+
+		} catch (Exception e) {
+			System.err.println("Could not establish the connection ");
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Gets the connection.
+	 *
+	 * @return the connection
+	 */
+	public Connection getConnection() throws SQLException {
+		System.out.println("getConnection() ==== " + connection);
+		if (connection == null || connection.isClosed()) {
+			initialize();
+		}
+		return connection;
+	}
+
+	/**
+	 * Close the connection
+	 *
+	 * @param connection
+	 *            the connection
+	 */
+	public static void close(Connection connection) {
+		if (connection != null) {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, e);
+			}
+		}
+	}
+
+	public static void main(String[] args) {
+
+		initialize();
+
+	}
+
 }

@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<%@page import="com.tracking.domain.UserDTO"%>
+<%@page import="java.util.ArrayList"%>
 <html>
 <head>
   <meta charset="utf-8">
@@ -49,6 +51,46 @@
 		
 	} 
 </script>
+
+
+<%
+
+
+UserDTO currentUser = (UserDTO) session.getAttribute("userSession");
+String userFName = "" , userLName = "" ;
+
+if( currentUser != null ){
+	
+	userFName = currentUser.getFirstName();
+	userLName = currentUser.getLastName();
+	
+}
+int userDid = -1 ; 
+UserDTO user = (UserDTO) session.getAttribute("searchedUser");
+String firstName = "";
+String lastName = "";
+String address = "";
+String mobileNumber = "";	
+String userName = "";
+String dob = "";
+String email = "";
+String password = "";
+
+if (user != null ){
+	
+	firstName =  user.getFirstName() == null ? "" : user.getFirstName() ;
+	lastName = user.getLastName() == null ? "" : user.getLastName();
+	address = user.getAddress1() == null ? "" : user.getAddress1() ;
+	mobileNumber = user.getContactNumber() == null ? "" : user.getContactNumber() ;
+	userName = user.getUserName() == null ? "" : user.getUserName() ;
+	dob = user.getDateOfBirth() == null ? "" : user.getDateOfBirth();
+	email = user.getEmail() == null ? "" : user.getEmail()  ;
+	password = user.getPassword()  == null ? "" : user.getPassword() ;
+	userDid = user.getUserId();
+}
+
+%>
+
 </head>
 <body onload="load()" class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -59,7 +101,7 @@
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>A</b>LT</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>SFTS</b>SFTS</span>
+      <span class="logo-lg"><b>Admin</b>LTE</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -124,7 +166,7 @@
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-              <span class="hidden-xs">Prageeth Nimshan</span>
+              <span class="hidden-xs"><%= userFName + " " + userLName %></span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
@@ -132,8 +174,8 @@
                 <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                 <p>
-                  Suwimali Bandara - Web Developer
-                  <small>Member since Nov. 2008</small>
+                  <%= userFName + " " + userLName %>
+                  <small>Member since Nov. 2012</small>
                 </p>
               </li>
               <!-- Menu Body -->
@@ -180,7 +222,7 @@
           <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>Prageeth Nimshan</p>
+          <p><%= userFName + " " + userLName %></p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
@@ -198,34 +240,26 @@
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
         <li class="header">MAIN NAVIGATION</li>
-         <li class="treeview">
-         
+            <li>
           <a href="Map1.jsp">
-            <i class="fa fa-files-o"></i>
-            <span>Manage Users</span>
-            <span class="label label-primary pull-right">4</span>
+            <i class="fa fa-th"></i> <span>Manage Users</span>
+            <small class="label pull-right bg-green"></small>
           </a>
         </li>
         <li>
           <a href="ManageDevice.jsp">
-            <i class="fa fa-th"></i> <span>Manage Device</span>
-            <small class="label pull-right bg-green">new</small>
+            <i class="fa fa-laptop"></i> <span>Manage Device</span>
+            <small class="label pull-right bg-green"></small>
           </a>
         </li>
         
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-pie-chart"></i>
-            <span>Add Land Marks</span>
-            <i class="fa fa-angle-left pull-right"></i>
+       <li>
+          <a href="addLandmark.jsp">
+            <i class="fa fa-map"></i> <span>Add Landmarks</span>
+            <small class="label pull-right bg-green"></small>
           </a>
-          <ul class="treeview-menu">
-            <li><a href="pages/charts/chartjs.html"><i class="fa fa-circle-o"></i>Device 1</a></li>
-            <li><a href="pages/charts/morris.html"><i class="fa fa-circle-o"></i> Device 2</a></li>
-            <li><a href="pages/charts/flot.html"><i class="fa fa-circle-o"></i> Device 3</a></li>
-            <li><a href="pages/charts/inline.html"><i class="fa fa-circle-o"></i>Device 4</a></li>
-          </ul>
         </li>
+          
         
         <li class="treeview">
           <a href="Reports.jsp">
@@ -268,7 +302,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Delete User
+       Delete User
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Manage User</a></li>
@@ -286,41 +320,21 @@
           <!-- Profile Image -->
           <div class="box box-primary">
             <div class="box-body box-profile">
-              <img class="profile-user-img img-responsive img-circle" src="dist/img/avatar04.png">
+              <img class="profile-user-img img-responsive img-circle" src="dist/img/avatar04.png" alt="User profile picture">
 
-              <h3 class="profile-username text-center"></h3>
+              <h3 class="profile-username text-center"> </h3>
 
-              <p class="text-muted text-center"></p>
+              <p class="text-muted text-center"><%=session.getAttribute("statusmsg") == null ? "" : session.getAttribute("statusmsg") %></p>
 
-              
             </div>
             <!-- /.box-body -->
           </div>
           <!-- /.box -->
 
-          <!-- About Me Box -->
-          <div class="">
-            <div class="">
-            	<%
-            	String statusmsg = "";
-            	System.out.println(" add user page session "+ request.getSession() );
-            	if( request != null  && request.getSession() != null ){
-            		Object statusObj =  request.getSession().getAttribute("statusmsg") ;
-            		if(statusObj != null){
-            			statusmsg = statusObj.toString();
-            		}
-            	}            		
-            	
-            	%>	
-              <%= statusmsg%>
-            </div>
-           
-            <!-- /.box-body -->
-          </div>
+         
           <!-- /.box -->
         </div>
         <!-- /.col -->
-        
       
         
         
@@ -331,124 +345,117 @@
             </ul>
             <div class="tab-content">
               <div class="active tab-pane" id="settings">
-                
-                <form class="form-horizontal"    action="user" method="POST">
-                
+               
+               <form class="form-horizontal"  action ="user" method = "POST" >
+               		<input type="hidden" name="user_command" id="user_command" value="searchUser"></input>
+               		  <input type="hidden" name="fromPage" id="fromPage" value="deletePage"></input>
+	             	  <div class="form-group form-group-sm">
+	                    <label for="inputName" class="col-sm-2 control-label">User Name</label>
+	                    <div class="col-sm-10">
+	                      	<div class="input-group ">
+	                    		<input type="text" class="form-control" id="searchName" name="searchName" value="<%=userName%>" placeholder="User Name" />
+					      			<span class="input-group-btn">
+					        		<button class="btn btn-sm" type="submit">Go!</button>
+					      			</span>
+					    	</div><!-- /input-group -->
+	                    </div><!-- /col-sm-10 -->                    
+	                  	</div>               
+               </form> <!-- end  search form  -->
              
-                  <div class="form-group">
+               <hr>
+               
+                <form class="form-horizontal"  action ="user" method = "POST" >
+                
+                   <input type="hidden" name="userDid" id="userDid" value="<%=userDid%>"></input>
+                   <div class="form-group">
                     <label for="inputName" class="col-sm-2 control-label">Name</label>
 
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputFName" name="inputFName"  placeholder="First Name">
-                                       
-                    <div class="col-sm-4">
-                      <button type="submit" name="addUser" id ="addUser"  class="btn btn-danger">Search</button>
-                    </div>
-                    
+                      <input type="text" class="form-control" name="inputFName" id="inputFName" placeholder="First Name" value="<%=firstName%>" />
+                    </div>                    
                   </div>
-                  </div>
+                  
+                  
                   <div class="form-group">
                     <label for="inputName" class="col-sm-2 control-label"></label>
 
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputLName"  name="inputLName" placeholder="Last Name">
-                    </div>
-                    
+                      <input type="text" class="form-control" name="inputLName" id="inputLName" placeholder="Last Name" value="<%=lastName%>" />
+                    </div>                    
                   </div>
-                 
                   
                
                   <div class="form-group">
-                    <label for="inputAddress" class="col-sm-2 control-label">Address</label>
+                    <label for="inputExperience" class="col-sm-2 control-label">Address</label>
 
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputAddress"  name="inputAddress"  placeholder="Address">
+                      <input type="text" class="form-control" id="inputAddress" name="inputAddress"  placeholder="Address" value="<%=address%>"  />
                     </div>
                    </div>
                    
-                   <div class="form-group">
-                    <label for="inputStreet" class="col-sm-2 control-label">Street</label>
-						<div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputStreet"  name="inputStreet"  placeholder="Street">
-                    </div>
-                   </div>
-                   
-                   <div class="form-group">
-                    <label for="inputCity" class="col-sm-2 control-label">City</label>
-						<div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputCity"  name="inputCity"  placeholder="City">
-                    </div>
-                   </div>
-                   
-                   <div class="form-group">
+                  
+                <!--        <div class="form-group">
                     <label for="inputSkills" class="col-sm-2 control-label">Date of Birth</label>
 
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inptDoB"  name="inptDoB"  placeholder="DD/MM/YYYY">
+                      <input type="text" class="form-control" name="inputDoB" id="inputDoB" placeholder="DD/MM/YYYY"  value="<%=dob%>" />
                     </div>
                   </div>
-                  
-                  <div class="form-group">
+             
+                 <div class="form-group">
                     <label for="inputSkills" class="col-sm-2 control-label">Role</label>
 
-                    <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputRole" name="inputRole"  placeholder="Role">
+                    <div class="col-sm-10">                  
+                      <select class="form-control select1" name ="roleUser" id ="roleUser" style="width: 100%;">
+                       	  <option value="-1">-- Select -- </option>
+		                  <option value="1">Admin</option>
+		                  <option value="2">Sales Executive</option>		                 
+	                  </select>
                     </div>
-                  </div>
+                  </div>  
                   
                     <div class="form-group">
                     <label for="inputSkills" class="col-sm-2 control-label">Contact No</label>
 
                     <div class="col-sm-10">
-                      <input type="number" class="form-control" id="inputContactNo" name="inputContactNo"  placeholder="Contact Number">
+                      <input type="text" class="form-control" name="inputContactNo" id="inputContactNo" placeholder="Contact Number" value="<%=mobileNumber%>" >
                     </div>
                   </div>
-                  
+                    --> 
                      <div class="form-group">
                     <label for="inputEmail" class="col-sm-2 control-label">Email</label>
 
                     <div class="col-sm-10">
-                      <input type="email" class="form-control" id="inputEmail"  name="inputEmail"  placeholder="Email">
+                      <input type="email" class="form-control" name="inputEmail" id="inputEmail" value="<%=email%>" placeholder="Email">
                     </div>
                   </div>
                   
-                  
-                  <div class="form-group">
+                   <div class="form-group">
                     <label for="inputUserName" class="col-sm-2 control-label">User Name</label>
 
                     <div class="col-sm-10">
-                      <input type="text" name="userName" id="userName" class="form-control" placeholder="User Name">
+                      <input type="text" name="userName" id="userName" class="form-control" value="<%=userName%>" placeholder="User Name">
                     </div>
                   </div>
                   
-                  <div class="form-group">
+            <!--  <div class="form-group">
                     <label for="inputName" class="col-sm-2 control-label">Password</label>
 
                     <div class="col-sm-10">
-                      <input type="password" name="password" class="form-control" placeholder="Password">
+                      <input type="password" name="password" id="password" class="form-control" value="<%=password%>" placeholder="Password">
                     </div>
                   </div>
-                  
-                  
+                  -->      
+                 
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                      <div class="checkbox">
-                        <label>
-                          <input type="checkbox"> I agree to the <a href="#">terms and conditions</a>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                    <input type="hidden" id="actionCommand" name ="actionCommand" value="addUser">
-                    
-                  <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                      <button type="submit" name="addUser" id ="addUser"  class="btn btn-danger">Delete</button>
+                    	<input type="hidden" name="user_command" id="user_command" value="deleteUser"></input>
+                      	<button type="submit" name="deleteUser" id ="deleteUser"  class="btn btn-danger">Delete User</button>
                     </div>
                   </div>
                   
                   
-                   </form>
+              </form> <!-- searchUser form -->
                   
               
               </div>

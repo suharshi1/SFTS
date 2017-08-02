@@ -5,7 +5,7 @@
 <html>
 
 <%@ page import="java.util.ArrayList"%>
-<%@page import="com.tracking.domain.User"%>
+<%@page import="com.tracking.domain.UserDTO"%>
 <head>
 
 
@@ -48,11 +48,29 @@
 	type="text/javascript"></script>
 <script type="text/javascript">
 	function load() { 
-		if (GBrowserIsCompatible()) { 
+		
+
+		if (GBrowserIsCompatible()) { 			
+			
 			var map = new GMap2(document.getElementById("world-map2")); 
 			map.setCenter(new GLatLng(7.8731, 80.7718), 7); 
 			map.addControl(new GSmallMapControl()); 
 			map.addControl(new GOverviewMapControl());
+			
+			
+			 var myLatLng =  new GLatLng(6.9271, 79.8612) ;
+  			 console.log(myLatLng);
+  		
+  			// add values to the initial values of the map locations
+  			 var markerCol = new GMarker(new GLatLng(6.9271, 79.8612), { title:"Colombo" });
+  			var markerKandy = new GMarker(new GLatLng(7.2906 , 80.6337), { title:"Kandy" });
+  			var markerApura = new GMarker(new GLatLng(8.3114, 80.4037), { title:"Anuradhapura" });
+  	  		
+  			
+  		// show the landmarks in the map
+  			map.addOverlay(markerCol);
+  			map.addOverlay(markerKandy);
+  			map.addOverlay(markerApura);
 		} 	
 		
 	} 
@@ -92,6 +110,15 @@
 <div class="wrapper">
 
 <%
+UserDTO currentUser = (UserDTO) session.getAttribute("userSession");
+String userFName = "" , userLName = "" ;
+
+if( currentUser != null ){
+	
+	userFName = currentUser.getFirstName();
+	userLName = currentUser.getLastName();
+	
+}
 
 %>
 
@@ -166,7 +193,7 @@
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-              <span class="hidden-xs">Prageeth Nimshan</span>
+              <span class="hidden-xs"> <%= userFName + " " + userLName %>  </span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
@@ -174,8 +201,8 @@
                 <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                 <p>
-                  Prageeth Nimshan - Web Developer
-                  <small>Member since Nov. 2012</small>
+                  <%= userFName + " " + userLName %>
+                 
                 </p>
               </li>
               <!-- Menu Body -->
@@ -199,7 +226,7 @@
                   <a href="#" class="btn btn-default btn-flat">Profile</a>
                 </div>
                 <div class="pull-right">
-                  <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                  <a href="#" class="btn btn-default btn-flat" id="signoutBtn" name="signoutBtn" onclick="logout();">Sign out</a>
                 </div>
               </li>
             </ul>
@@ -222,7 +249,7 @@
           <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>Prageeth Nimshan</p>
+          <p><%= userFName + " " + userLName %></p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
@@ -242,45 +269,33 @@
         <li class="header">MAIN NAVIGATION</li>
          <li class="treeview">
          
-          <a href="#">
-            <i class="fa fa-files-o"></i>
-            <span>Manage Users</span>
-            <span class="label label-primary pull-right">4</span>
+         <li>
+          <a href="Map1.jsp">
+            <i class="fa fa-th"></i> <span>Manage Users</span>
+            <small class="label pull-right bg-green"></small>
           </a>
         </li>
         <li>
           <a href="ManageDevice.jsp">
-            <i class="fa fa-th"></i> <span>Manage Device</span>
-            <small class="label pull-right bg-green">new</small>
+            <i class="fa fa-laptop"></i> <span>Manage Device</span>
+            <small class="label pull-right bg-green"></small>
           </a>
         </li>
         
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-pie-chart"></i>
-            <span>Add Land Marks</span>
-            <i class="fa fa-angle-left pull-right"></i>
+       <li>
+          <a href="addLandmark.jsp">
+            <i class="fa fa-map"></i> <span>Add Landmarks</span>
+            <small class="label pull-right bg-green"></small>
           </a>
-          <ul class="treeview-menu">
-            <li><a href="pages/charts/chartjs.html"><i class="fa fa-circle-o"></i>Device 1</a></li>
-            <li><a href="pages/charts/morris.html"><i class="fa fa-circle-o"></i> Device 2</a></li>
-            <li><a href="pages/charts/flot.html"><i class="fa fa-circle-o"></i> Device 3</a></li>
-            <li><a href="pages/charts/inline.html"><i class="fa fa-circle-o"></i>Device 4</a></li>
-          </ul>
         </li>
+          
         
-        <li class="treeview">
+       <li>
           <a href="Reports.jsp">
             <i class="fa fa-dashboard"></i> <span>Reports</span>
              <i class="fa fa-angle-left pull-right"></i>
           </a>
-          <ul class="treeview-menu">
-            <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> User Wise</a></li>
-            <li><a href="index2.html"><i class="fa fa-circle-o"></i>Date Wise</a></li>
-            <li><a href="index2.html"><i class="fa fa-circle-o"></i>Month Wise</a></li>
-            <li><a href="index2.html"><i class="fa fa-circle-o"></i>Device Status</a></li>
-          </ul>
-        </li>  
+     </li>
         
         <li>
           <a href="pages/calendar.html">
@@ -386,7 +401,7 @@
         <!-- ./col -->
       </div>
       <%
-     	ArrayList<User> users = (ArrayList<User>)session.getAttribute("allUsers");
+     	ArrayList<UserDTO> users = (ArrayList<UserDTO>)session.getAttribute("allUsers");
      
       %>
       
@@ -413,24 +428,25 @@
             <div class="box-body">
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
-                <tr>
-                  <th>User Name</th>
+                <tr>                  
                   <th>First Name</th>
                   <th>Last Name</th>
                   <th>Address</th>
-                  <th>Street</th>
+                  <th>Email</th>
+                  <th>Contact No</th>
+                  
                 </tr>
                 </thead>
                 <tbody>
-                <% for (User user : users){  %>
+                <% for (UserDTO user : users){  %>
                 
                 
                 <tr>
-                  <td><%=user.getUserName() %> </td>
-	                <td><%=user.getFirstName() %> </td>
+  	                <td><%=user.getFirstName() %> </td>
 	                <td><%=user.getLastName() %> </td>
 	                <td><%=user.getAddress1() %> </td>
-	                <td><%=user.getStreet() %> </td>
+	                <td><%=user.getEmail()%> </td>
+	                <td><%=user.getContactNumber() %> </td>
                 
                 </tr>
                 
@@ -550,14 +566,10 @@
               </form>
             </div>
             <div class="box-footer clearfix">
-              <button type="button" class="pull-right btn btn-default" id="sendEmail">Send
+              <button type="button" class="pull-right btn btn-default" id="sendEmail" name="sendEmail">Send
                 <i class="fa fa-arrow-circle-right"></i></button>
             </div>
           </div>
-
-
-	
-
 
           <!-- Calendar -->
           <div class="box box-solid bg-green-gradient">
@@ -588,7 +600,7 @@
             <!-- /.box-header -->
             <div class="box-body no-padding">
               <!--The calendar -->
-              <div id="calendar" style="width: 100%"></div>
+              <div id="calendar" name="calendar" style="width: 100%"></div>
             </div>
             <!-- /.box-body -->
             <div class="box-footer text-black">
@@ -869,5 +881,7 @@
 <script src="dist/js/pages/dashboard.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
+<!-- AdminLTE for validations -->
+<script src="plugins/userController.js"></script>
 </body>
 </html>

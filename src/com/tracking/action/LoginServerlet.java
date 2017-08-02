@@ -17,8 +17,8 @@ import com.tracking.token.*;
 import com.tracking.utils.SFTSUtil;
 import com.tracking.utils.UserRole;
 import com.tracking.connectivity.*;
-import com.tracking.domain.Device;
-import com.tracking.domain.User;
+import com.tracking.domain.DeviceDTO;
+import com.tracking.domain.UserDTO;
 
 //@WebServlet(name = "Login", urlPatterns = {"/Login"})
 public class LoginServerlet extends HttpServlet 
@@ -33,16 +33,14 @@ public class LoginServerlet extends HttpServlet
         String userName = request.getParameter("username");
         String password = request.getParameter("password");
 
-        User user = new User(userName , password);
+        UserDTO user = new UserDTO(userName , password);
         
+        request.getSession().setAttribute("statusmsg", null);
+        request.getSession().removeAttribute("allUsers");
+        request.getSession().removeAttribute("allDevices");
+          
         System.out.println("userName "+userName+ "  password "+password);
         
-    /*   
-     	String strObject = request.getParameter("data");
-        Gson gson = Converters.registerLocalDateTime(new GsonBuilder()).create();
-        User user = gson.fromJson(strObject, User.class);
-        
-    */
         if (userName == null || password == null ) 
         {           
             response.sendRedirect(request.getContextPath()  + "/Map1.jsp");
@@ -52,7 +50,7 @@ public class LoginServerlet extends HttpServlet
             try 
             {
             	UserDAO userDAO =  new UserDAO();
-				User user1 = userDAO.login(user);
+				UserDTO user1 = userDAO.login(user);
 				System.out.println("Login ....  user1 "+user1);
 				
 				if (user1 != null) {
@@ -71,7 +69,7 @@ public class LoginServerlet extends HttpServlet
                     if(user1.getRole() == UserRole.ADMIN.getRoleDid()){
                     	
                     	// populate all users to populate in the table
-                    	ArrayList<User> userList = userDAO.getAvailableUsers();
+                    	ArrayList<UserDTO> userList = userDAO.getAvailableUsers();
                     	System.out.println("all users @ login user page "+userList);
                     	if(SFTSUtil.isNotEmpty(userList)){
                     		httpSession.setAttribute("allUsers", userList);
@@ -79,7 +77,7 @@ public class LoginServerlet extends HttpServlet
                     
                     	// populate all users to populate in the table
                     	DeviceDAO deviceDAO = new DeviceDAO();
-                    	ArrayList<Device> deviceList = deviceDAO.getAvailableDevices();
+                    	ArrayList<DeviceDTO> deviceList = deviceDAO.getAvailableDevices();
                     	System.out.println(" all devices @ login user page "+deviceList);
                     	if(SFTSUtil.isNotEmpty(deviceList)){
                     		httpSession.setAttribute("allDevices", deviceList);

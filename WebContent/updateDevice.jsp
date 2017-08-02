@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<%@page import="com.tracking.domain.Device"%>
+<%@page import="com.tracking.domain.DeviceDTO"%>
+<%@page import="com.tracking.domain.UserDTO"%>
 <html>
 <head>
   <meta charset="utf-8">
@@ -51,7 +52,7 @@
 	} 
 </script>
 <%
-Device device = (Device) session.getAttribute("searchedDevice");
+DeviceDTO device = (DeviceDTO) session.getAttribute("searchedDevice");
 int deviceDid = 0;
 String deviceId = "";
 String description= "";
@@ -64,6 +65,17 @@ if (device != null ){
 	description = device.getDescription();
 	IMEI = device.getImei();
 }
+
+UserDTO currentUser = (UserDTO) session.getAttribute("userSession");
+String userFName = "" , userLName = "" ;
+
+if( currentUser != null ){
+	
+	userFName = currentUser.getFirstName();
+	userLName = currentUser.getLastName();
+	
+}
+
 
 %>
 </head>
@@ -141,7 +153,7 @@ if (device != null ){
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-              <span class="hidden-xs">Prageeth Nimshan</span>
+              <span class="hidden-xs"><%= userFName + " " + userLName %></span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
@@ -149,7 +161,7 @@ if (device != null ){
                 <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                 <p>
-                  Suwimali Bandara - Web Developer
+                  <%= userFName + " " + userLName %>
                   <small>Member since Nov. 2008</small>
                 </p>
               </li>
@@ -197,7 +209,7 @@ if (device != null ){
           <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>Prageeth Nimshan</p>
+          <p><%= userFName + " " + userLName %></p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
@@ -217,32 +229,26 @@ if (device != null ){
         <li class="header">MAIN NAVIGATION</li>
          <li class="treeview">
          
+         <li>
           <a href="Map1.jsp">
-            <i class="fa fa-files-o"></i>
-            <span>Manage Users</span>
-            <span class="label label-primary pull-right">4</span>
+            <i class="fa fa-th"></i> <span>Manage Users</span>
+            <small class="label pull-right bg-green"></small>
           </a>
         </li>
         <li>
           <a href="ManageDevice.jsp">
-            <i class="fa fa-th"></i> <span>Manage Device</span>
-            <small class="label pull-right bg-green">new</small>
+            <i class="fa fa-laptop"></i> <span>Manage Device</span>
+            <small class="label pull-right bg-green"></small>
           </a>
         </li>
         
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-pie-chart"></i>
-            <span>Add Land Marks</span>
-            <i class="fa fa-angle-left pull-right"></i>
+       <li>
+          <a href="addLandmark.jsp">
+            <i class="fa fa-map"></i> <span>Add Landmarks</span>
+            <small class="label pull-right bg-green"></small>
           </a>
-          <ul class="treeview-menu">
-            <li><a href="pages/charts/chartjs.html"><i class="fa fa-circle-o"></i>Device 1</a></li>
-            <li><a href="pages/charts/morris.html"><i class="fa fa-circle-o"></i> Device 2</a></li>
-            <li><a href="pages/charts/flot.html"><i class="fa fa-circle-o"></i> Device 3</a></li>
-            <li><a href="pages/charts/inline.html"><i class="fa fa-circle-o"></i>Device 4</a></li>
-          </ul>
         </li>
+          
         
         <li class="treeview">
           <a href="Reports.jsp">
@@ -339,7 +345,8 @@ if (device != null ){
                 
                  <form class="form-horizontal"  action ="device" method = "POST" >
                		<input type="hidden" name="user_command" id="user_command" value="searchDevice"></input>
-	             	  <div class="form-group form-group-sm">
+	             	 <input type="hidden" name="from_page" id="from_page" value="updatePage"></input>
+	             	  <div class="form-group">
 	                    <label for="inputName" class="col-sm-2 control-label">Device ID</label>
 	                    <div class="col-sm-10">
 	                      	<div class="input-group ">
@@ -373,21 +380,12 @@ if (device != null ){
                     </div>
                    </div>
                   
-                  <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                      <div class="checkbox">
-                        <label>
-                          <input type="checkbox"> I agree to the <a href="#">terms and conditions</a>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                    
+                
           
                    <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                      <input type="hidden" name="user_command" id="user_command" value="updateDevice"></input>
-                      <button type="submit" name="addUser" id ="addUser"  class="btn btn-success">Update</button>
+                      <button type="submit" name="addUser" id ="addUser"  class="btn btn-success">Update Device</button>
                       
                         <%= statusmsg %>
                     </div>

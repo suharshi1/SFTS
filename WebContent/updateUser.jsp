@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<%@page import="com.tracking.domain.User"%>
+<%@page import="com.tracking.domain.UserDTO"%>
 <%@page import="java.util.ArrayList"%>
 <html>
 <head>
@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+  <!-- bootstrap datepicker -->
+  <link rel="stylesheet" href="plugins/datepicker/datepicker3.css">
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Theme style -->
@@ -38,24 +40,22 @@
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
-<script src="http://maps.google.com/maps?file=api&v=2&key=AIzaSyBP5wM7FziIOyjASsYufkUSHrw2cXkdrtA"
-	type="text/javascript"></script>
-<script type="text/javascript">
-	function load() { 
-		if (GBrowserIsCompatible()) { 
-			var map = new GMap2(document.getElementById("world-map2")); 
-			map.setCenter(new GLatLng(7.8731, 80.7718), 7); 
-			map.addControl(new GSmallMapControl()); 
-			map.addControl(new GOverviewMapControl());
-		} 	
-		
-	} 
-</script>
-
-
+  
+  
 <%
+
+UserDTO currentUser = (UserDTO) session.getAttribute("userSession");
+String userFName = "" , userLName = "" ;
+
+if( currentUser != null ){
+	
+	userFName = currentUser.getFirstName();
+	userLName = currentUser.getLastName();
+	
+}
+
 int userDid = -1 ; 
-User user = (User) session.getAttribute("searchedUser");
+UserDTO user = (UserDTO) session.getAttribute("searchedUser");
 String firstName = "";
 String lastName = "";
 String address = "";
@@ -64,6 +64,8 @@ String userName = "";
 String dob = "";
 String email = "";
 String password = "";
+String role = "";
+String device = "";
 
 if (user != null ){
 	
@@ -76,9 +78,86 @@ if (user != null ){
 	email = user.getEmail() == null ? "" : user.getEmail()  ;
 	password = user.getPassword()  == null ? "" : user.getPassword() ;
 	userDid = user.getUserId();
+	role = String.valueOf(user.getRole());
+	device = String.valueOf(user.getDeviceDid());
+	System.out.println("this is the dob "+dob);
 }
 
 %>
+  
+<script src="http://maps.google.com/maps?file=api&v=2&key=AIzaSyBP5wM7FziIOyjASsYufkUSHrw2cXkdrtA"
+	type="text/javascript"></script>
+<script type="text/javascript">
+	function load() { 
+		console.log("load function 222 ");
+		// load the device drop down list
+		$.ajax({  
+		    type: "GET",  
+		    url: "ajaxCommands",  
+		    data: "command=loadDevices",  
+		    success: function(result){  
+		    	console.log("loadDevices ");
+		    	console.log(result);
+		    	console.log (result.DeviceArray.length);
+		    	var select = document.getElementById("device");
+		        var option1 = document.createElement("option");
+	    	    option1.text = "-- Select --";
+	    	    option1.value = -1;	    	    
+	    	    select.add(option1);
+	    	    console.log(result);
+		    	for (var i = 0; i < result.DeviceArray.length; i++) {		    	    
+		    	    var option = document.createElement("option");
+		    	    option.text = result.DeviceArray[i].description;
+		    	    option.value = result.DeviceArray[i].deviceDid;
+		    	    select.add(option);
+		    	}
+		    
+		    },failuer:function(result){
+				console.log ("failed request ");
+		    }                
+		  });
+		
+		
+		// load the role drop down list
+		$.ajax({  
+		    type: "GET",  
+		    url: "ajaxCommands",  
+		    data: "command=loadRoles",  
+		    success: function(result){  
+		    	console.log("loadRoles ");		    	
+		    	console.log(result);
+		    	console.log (result.RoleArray.length);
+		    	var select = document.getElementById("role");
+		        var option1 = document.createElement("option");
+	    	    option1.text = "-- Select --";
+	    	    option1.value = -1;	    	    
+	    	    select.add(option1);
+	    	    
+		    	for (var i = 0; i < result.RoleArray.length; i++) {		    	    
+		    	    var option = document.createElement("option");
+		    	    option.text = result.RoleArray[i].description;
+		    	    option.value = result.RoleArray[i].roleDid;
+		    	    select.add(option);
+		    	}
+		      
+		    },failuer:function(result){
+				console.log ("failed request ");
+		    }                
+		  });
+		
+		
+		
+		
+		if (GBrowserIsCompatible()) { 
+			var map = new GMap2(document.getElementById("world-map2")); 
+			map.setCenter(new GLatLng(7.8731, 80.7718), 7); 
+			map.addControl(new GSmallMapControl()); 
+			map.addControl(new GOverviewMapControl());
+		} 	
+		
+	} 
+</script>
+
 
 </head>
 <body onload="load()" class="hold-transition skin-blue sidebar-mini">
@@ -155,7 +234,7 @@ if (user != null ){
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-              <span class="hidden-xs">Alexander Pierce</span>
+              <span class="hidden-xs"><%= userFName + " " + userLName %></span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
@@ -163,7 +242,7 @@ if (user != null ){
                 <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                 <p>
-                  Alexander Pierce - Web Developer
+                 <%= userFName + " " + userLName %>
                   <small>Member since Nov. 2012</small>
                 </p>
               </li>
@@ -229,34 +308,26 @@ if (user != null ){
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
         <li class="header">MAIN NAVIGATION</li>
-         <li class="treeview">
-         
+            <li>
           <a href="Map1.jsp">
-            <i class="fa fa-files-o"></i>
-            <span>Manage Users</span>
-            <span class="label label-primary pull-right">4</span>
+            <i class="fa fa-th"></i> <span>Manage Users</span>
+            <small class="label pull-right bg-green"></small>
           </a>
         </li>
         <li>
           <a href="ManageDevice.jsp">
-            <i class="fa fa-th"></i> <span>Manage Device</span>
-            <small class="label pull-right bg-green">new</small>
+            <i class="fa fa-laptop"></i> <span>Manage Device</span>
+            <small class="label pull-right bg-green"></small>
           </a>
         </li>
         
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-pie-chart"></i>
-            <span>Add Land Marks</span>
-            <i class="fa fa-angle-left pull-right"></i>
+       <li>
+          <a href="addLandmark.jsp">
+            <i class="fa fa-map"></i> <span>Add Landmarks</span>
+            <small class="label pull-right bg-green"></small>
           </a>
-          <ul class="treeview-menu">
-            <li><a href="pages/charts/chartjs.html"><i class="fa fa-circle-o"></i>Device 1</a></li>
-            <li><a href="pages/charts/morris.html"><i class="fa fa-circle-o"></i> Device 2</a></li>
-            <li><a href="pages/charts/flot.html"><i class="fa fa-circle-o"></i> Device 3</a></li>
-            <li><a href="pages/charts/inline.html"><i class="fa fa-circle-o"></i>Device 4</a></li>
-          </ul>
         </li>
+          
         
         <li class="treeview">
           <a href="Reports.jsp">
@@ -323,51 +394,13 @@ if (user != null ){
 
               <p class="text-muted text-center">Sales Person</p>
 
-              <a href="#" class="btn btn-primary btn-block"><b>Assign</b></a>
+              <a href="#" class="btn btn-primary btn-block"><b>Update Image</b></a>
             </div>
             <!-- /.box-body -->
           </div>
           <!-- /.box -->
 
-          <!-- About Me Box -->
-          <div class="box box-primary">
-            <div class="box-header with-border">
-              <h3 class="box-title">About Me</h3>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-              <strong><i class="fa fa-book margin-r-5"></i> Education</strong>
-
-              <p class="text-muted">
-                
-              </p>
-
-              <hr>
-
-              <strong><i class="fa fa-map-marker margin-r-5"></i> Address</strong>
-
-              <p class="text-muted"><%=address%></p>
-
-              <hr>
-
-              <strong><i class="fa fa-pencil margin-r-5"></i> Skills</strong>
-
-              <p>
-                <span class="label label-danger"></span>
-                <span class="label label-success"></span>
-                <span class="label label-info"></span>
-                <span class="label label-warning"></span>
-                <span class="label label-primary"></span>
-              </p>
-
-              <hr>
-
-              <strong><i class="fa fa-file-text-o margin-r-5"></i> Notes</strong>
-
-              <p></p>
-            </div>
-            <!-- /.box-body -->
-          </div>
+         
           <!-- /.box -->
         </div>
         <!-- /.col -->
@@ -429,13 +462,21 @@ if (user != null ){
                     </div>
                    </div>
                    
-                   <div class="form-group">
+                  
+                  <div class="form-group">
                     <label for="inputSkills" class="col-sm-2 control-label">Date of Birth</label>
-
-                    <div class="col-sm-10">
-                      <input type="text" class="form-control" name="inputDoB" id="inputDoB" placeholder="DD/MM/YYYY"  value="<%=dob%>" />
-                    </div>
+				<div class="col-sm-10">
+                <div class="input-group date">
+                  <div class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
                   </div>
+                  <input type="text" class="form-control pull-right" id="datepicker" name="datepicker">
+                </div>
+                </div>
+                <!-- /.input group -->
+           
+                  </div>
+                  
                   
                   <div class="form-group">
                     <label for="inputSkills" class="col-sm-2 control-label">Role</label>
@@ -444,10 +485,19 @@ if (user != null ){
                  <!--  <input type="text" class="form-control" name="inputRole" id="inputRole" placeholder="Role">  -->    
                       
                       
-                      <select class="form-control select1" name ="roleUser" id ="roleUser" style="width: 100%;">
-                       	  <option value="-1">-- Select -- </option>
-		                  <option value="1">Admin</option>
-		                  <option value="2">Sales Executive</option>		                 
+                      <select class="form-control select1" id="role" name="role" value="<%=1%>>" style="width: 100%;">
+                       	  
+	                  </select>
+                    </div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="inputSkills" class="col-sm-2 control-label">Device</label>
+
+                    <div class="col-sm-10">
+                      
+                      <select id="device" name="device" class="form-control select1"  style="width: 100%;">
+                       	 
 	                  </select>
                     </div>
                   </div>
@@ -484,20 +534,11 @@ if (user != null ){
                     </div>
                   </div>
                   
-                  
-                  <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                      <div class="checkbox">
-                        <label>
-                          <input type="checkbox"> I agree to the <a href="#">terms and conditions</a>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
+                 
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                     	<input type="hidden" name="user_command" id="user_command" value="updateUser"></input>
-                      	<button type="submit" name="updateUser" id ="updateUser"  class="btn btn-success">Submit</button>
+                      	<button type="submit" name="updateUser" id ="updateUser"  class="btn btn-success">Update User</button>
                     </div>
                   </div>
                   
@@ -737,6 +778,16 @@ if (user != null ){
 <script src="dist/js/app.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
+<!-- bootstrap datepicker -->
+<script src="plugins/datepicker/bootstrap-datepicker.js"></script>
+<script>
+$(function () {
+ //Date picker
+    $('#datepicker').datepicker({
+      autoclose: true
+    });
+});
+</script>
 </body>
 
 

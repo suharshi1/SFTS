@@ -1,5 +1,10 @@
 <!DOCTYPE html>
+<%@page import="com.tracking.domain.DeviceDTO"%>
+<%@ page import="java.util.ArrayList"%>
+<%@page import="com.tracking.domain.UserDTO"%>
+
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -49,6 +54,35 @@
 		
 	} 
 </script>
+<%
+DeviceDTO device = (DeviceDTO) session.getAttribute("searchedDevice");
+int deviceDid = 0;
+String deviceId = "";
+String description= "";
+String IMEI= "";
+
+
+if (device != null ){
+	deviceDid =  device.getDeviceDid();
+	deviceId = device.getDeviceId();
+	description = device.getDescription();
+	IMEI = device.getImei();
+}
+
+UserDTO currentUser = (UserDTO) session.getAttribute("userSession");
+String userFName = "" , userLName = "" ;
+
+if( currentUser != null ){
+	
+	userFName = currentUser.getFirstName();
+	userLName = currentUser.getLastName();
+	
+}
+
+
+
+
+%>
 </head>
 <body onload="load()" class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -124,7 +158,7 @@
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-              <span class="hidden-xs">Prageeth Nimshan</span>
+              <span class="hidden-xs"><%= userFName + " " + userLName %></span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
@@ -132,7 +166,7 @@
                 <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                 <p>
-                  Suwimali Bandara - Web Developer
+                 <%= userFName + " " + userLName %>
                   <small>Member since Nov. 2008</small>
                 </p>
               </li>
@@ -180,7 +214,7 @@
           <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>Prageeth Nimshan</p>
+          <p><%= userFName + " " + userLName %></p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
@@ -200,26 +234,26 @@
         <li class="header">MAIN NAVIGATION</li>
          <li class="treeview">
          
-         <li>
+          <li>
           <a href="Map1.jsp">
-            <i class="fa fa-th"></i> <span>Manage User</span>
+            <i class="fa fa-th"></i> <span>Manage Users</span>
             <small class="label pull-right bg-green"></small>
           </a>
         </li>
-        
         <li>
           <a href="ManageDevice.jsp">
-            <i class="fa fa-th"></i> <span>Manage Device</span>
+            <i class="fa fa-laptop"></i> <span>Manage Device</span>
             <small class="label pull-right bg-green"></small>
           </a>
         </li>
         
-        <li>
-          <a href="addLandMarks.jsp">
-            <i class="fa fa-th"></i> <span>Add Landmarks</span>
+       <li>
+          <a href="addLandmark.jsp">
+            <i class="fa fa-map"></i> <span>Add Landmarks</span>
             <small class="label pull-right bg-green"></small>
           </a>
         </li>
+          
         
         <li class="treeview">
           <a href="Reports.jsp">
@@ -279,17 +313,25 @@
 
          <!-- Profile Image -->
           <div class="">
-   
-
-              
             </div>
             <!-- /.box-body -->
           </div>
           <!-- /.box -->
 
           <!-- About Me Box -->
+          <%
+            	String statusmsg = "";
+            	System.out.println(" device page session "+ request.getSession() );
+            	if( request != null  && request.getSession() != null ){
+            		Object statusObj =  request.getSession().getAttribute("statusmsg") ;
+            		if(statusObj != null){
+            			statusmsg = statusObj.toString();
+            		}
+            	}            		
+            	
+           %>	
+         
           <div class="">
-          
            
             <!-- /.box-body -->
           </div>
@@ -297,73 +339,66 @@
         </div>
         <!-- /.col -->
         
+        
         <div class="col-md-10">
           <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
               <li class="active"><a href="#settings" data-toggle="tab">Delete</a></li>
             </ul>
-            
-           <div class="tab-content">
+            <div class="tab-content">
               <div class="active tab-pane" id="settings">
-            
-                <form class="form-horizontal"  action ="user" method = "POST" >
-               		<input type="hidden" name="user_command" id="user_command" value="searchUser"></input>
-	             	  <div class="form-group form-group-sm">
-	                    <label for="inputName" class="col-sm-2 control-label">User Name</label>
+                
+                 <form class="form-horizontal"  action ="device" method = "POST" >
+                 
+               		<input type="hidden" name="user_command" id="user_command" value="searchDevice"></input>
+	             	  <input type="hidden" name="fromPage" id="fromPage" value="deletePage"></input>
+	             	  <div class="form-group ">
+	                    <label for="inputName" class="col-sm-2 control-label">Device ID</label>
 	                    <div class="col-sm-10">
 	                      	<div class="input-group ">
-	                    		<input type="text" class="form-control" id="searchName" name="searchName" placeholder="User Name" />
+	                    		<input type="text" class="form-control" id="searchDevice" name="searchDevice" value="<%=deviceId%>" placeholder="Device ID" />
 					      			<span class="input-group-btn">
 					        		<button class="btn btn-sm" type="submit">Go!</button>
 					      			</span>
 					    	</div><!-- /input-group -->
 	                    </div><!-- /col-sm-10 -->                    
 	                  	</div>               
-              
-                         
-        
+               	</form> <!--  search form  -->
+                <hr>
+             
+          	<form class="form-horizontal"  action ="device" method = "POST" >
+               	  <input type="hidden" name="deviceId" id="deviceId" value="<%=deviceId%>"></input>
+               	  <input type="hidden" name="deviceDid" id="deviceDid" value="<%=deviceDid%>"></input>
                   <div class="form-group">
                     <label for="inputName" class="col-sm-2 control-label">IMEI</label>
 
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" id="IMEI"  name="IMEI" placeholder="IMEI">
+                      <input type="text" class="form-control" id="IMEI"  name="IMEI" placeholder="IMEI"value=" <%=IMEI%>">
                     </div>
                     
                   </div>
                  
-                  
-               
                   <div class="form-group">
                     <label for="inputAddress" class="col-sm-2 control-label">Description</label>
 
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" id="Description"  name="Description"  placeholder="Description">
+                      <input type="text" class="form-control" id="description"  name="description"  placeholder="Description"value=" <%=description%>">
                     </div>
                    </div>
-                   
                   
-                  
-                  
-                  <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                      <div class="checkbox">
-                        <label>
-                          <input type="checkbox"> I agree to the <a href="#">terms and conditions</a>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                    <input type="hidden" id="actionCommand" name ="actionCommand" value="updateDevice">
-                    
+                
+          
                    <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                     <input type="hidden" name="user_command" id="user_command" value="delete"></input>
-                      <button type="submit" name="addUser" id ="addUser"  class="btn btn-danger">Delete</button>
+                     <input type="hidden" name="user_command" id="user_command" value="deleteDevice"></input>
+                      <button type="submit" name="deleteDevice" id ="deleteDevice"  class="btn btn-danger">Delete Device</button>
+                      
+                        <%= statusmsg %>
                     </div>
                   </div>
+                   
                   
-                  
-                   </form>
+              </form>
                   
               
               </div>

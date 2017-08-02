@@ -10,13 +10,13 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.hibernate.user.UserManage;
+
 
 import java.sql.Statement;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
-import com.tracking.domain.Device;
-import com.tracking.domain.User;
+import com.tracking.domain.DeviceDTO;
+import com.tracking.domain.UserDTO;
 import com.tracking.utils.SFTSUtil;
 
 public class DeviceDAO {
@@ -27,12 +27,12 @@ public class DeviceDAO {
 		connectionManager = ConnectionManager.getInstance();
 	}
 
-	public User login(User user) throws SQLException {
+	public UserDTO login(UserDTO user) throws SQLException {
 		Connection conn = connectionManager.getConnection();
 		PreparedStatement preparedStatement;
 		System.out.println("Connection @ UserDAO " + conn);
 
-		User currentUser = null;
+		UserDTO currentUser = null;
 		try {
 			String query = "select * from user where userid= '"
 					+ user.getUserName() + "' AND password = '"
@@ -47,7 +47,7 @@ public class DeviceDAO {
 
 			ResultSet resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
-				currentUser = new User();
+				currentUser = new UserDTO();
 				// currentUser.setUserId(Integer.parseInt(resultSet.getString("userId")));
 				currentUser.setUserName(resultSet.getString("userId"));
 				currentUser.setFirstName(resultSet.getString("fName"));
@@ -75,7 +75,7 @@ public class DeviceDAO {
 
 	}
 
-	public int addDevice(Device device) throws SQLException {
+	public int addDevice(DeviceDTO device) throws SQLException {
 
 		Connection conn = connectionManager.getConnection();
 		PreparedStatement preparedStatement;
@@ -123,7 +123,7 @@ public class DeviceDAO {
 		return result;
 	}
 
-	public int deleteDevice(Device device) throws SQLException {
+	public int deleteDevice(DeviceDTO device) throws SQLException {
 
 		Connection conn = connectionManager.getConnection();
 		PreparedStatement preparedStatement;
@@ -133,18 +133,14 @@ public class DeviceDAO {
 
 			preparedStatement = conn.prepareStatement(queryDevice);
 
+			
 			preparedStatement.setInt(1, device.getDeviceDid());
 
 			System.out.println("delete device from database ------------- ");
 			System.out.println(queryDevice);
 
 			result = preparedStatement.executeUpdate();
-			System.out
-					.println("delete Device successfull  -------------  result "
-							+ result);
-			if (result > 0) {
-				result = 1;
-			}
+			
 			preparedStatement.close();
 
 		} catch (SQLException ex) {
@@ -169,7 +165,7 @@ public class DeviceDAO {
 		return result;
 	}
 
-	public Device searchDevice(Device device) throws SQLException {
+	public DeviceDTO searchDevice(DeviceDTO device) throws SQLException {
 
 		Connection conn = connectionManager.getConnection();
 		Statement statement = null;
@@ -179,9 +175,9 @@ public class DeviceDAO {
 			// create normal statement
 			statement = conn.createStatement();
 			String deviceId = device.getDeviceId();
-			String queryUser = "select * from device where deviceId = '"+deviceId+"'";
-			rs = statement.executeQuery(queryUser);
-			System.out.println("Search user successful ========== queryUser "+queryUser);
+			String queryDevice = "select * from device where deviceId = '"+deviceId+"'";
+			rs = statement.executeQuery(queryDevice);
+			System.out.println("Search user successful ========== queryUser "+queryDevice);
 			result = 1;
 			int devicedid = -1;
 			while (rs.next()) {
@@ -213,10 +209,10 @@ public class DeviceDAO {
 		return device;
 	}
 
-	public int updateDevice(Device device) throws SQLException {
+	public int updateDevice(DeviceDTO device) throws SQLException {
 
 		Connection conn = connectionManager.getConnection();
-		PreparedStatement preparedStatement;
+		PreparedStatement preparedStatement = null ;
 		int result = -1;
 		try {
 			// String query =
@@ -251,6 +247,16 @@ public class DeviceDAO {
 			}
 			System.out.println("update device failed  ------------- ");
 		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException ex) {
+					Logger.getLogger(DeviceDAO.class.getName()).log(
+							Level.WARNING, null, ex);
+				}
+			}
+			
+			
 			if (conn != null) {
 				try {
 					conn.close();
@@ -264,50 +270,56 @@ public class DeviceDAO {
 	}
 	
 
-    public ArrayList<Device> getAvailableDevices()throws SQLException{
-    	Connection conn = connectionManager.getConnection();
-		
-		ArrayList<Device> devices =  new ArrayList<Device>();
-		
-	
-		System.out.println("Connection @ UserDAO " + conn);
-		Device device = null;
+    public ArrayList<DeviceDTO> getAvailableDevices()throws SQLException{
+		Connection conn = connectionManager.getConnection();
+
+		ArrayList<DeviceDTO> devices = new ArrayList<DeviceDTO>();
+
+		System.out.println("Connection @ UserDAO.getAvailableDevices " + conn);
+		DeviceDTO device = null;
 		String query = "select * from device ";
 		CallableStatement callable = conn.prepareCall(query);
 		boolean results = callable.execute();
-		int userDid = -1;
-		
-		// Loop through the available result sets.
-		while (results) {
-			ResultSet rs = callable.getResultSet();
-			System.out.println("ResultSet @ load available devices "+devices);
-			
-			try{
+
+		ResultSet rs = null;
+		try {
+			// Loop through the available result sets.
+			while (results) {
+				rs = callable.getResultSet();
+				System.out.println("ResultSet @ load available devices " + devices);
+
 				// Retrieve data from the result set.
-				while (rs.next()) {
-					device = new Device();
+				while (rs != null && rs.next()) {
+					device = new DeviceDTO();
 					device.setDescription(rs.getString("description"));
 					device.setDeviceId(rs.getString("deviceId"));
 					device.setImei(rs.getString("imei"));
-					device.setDeviceDid(rs.getInt("devicedid"));
+					device.setDeviceDid(Integer.valueOf(rs.getString("deviceDid")));
 
-   	
-	            	System.out.println("devices @ load avilable devices "+device);
-	            	devices.add(device);
-	            	device = null ;
+					System.out.println("devices @ load avilable devices " + device);
+					devices.add(device);
+					device = null;
 				}
-				rs.close();
-			}catch(Exception ex){
-				System.out.println("Exception @ load all users ");
-				ex.printStackTrace();
+
+				// Check for next result set
+				results = callable.getMoreResults();
 			}
-			
-			// Check for next result set
-			results = callable.getMoreResults();
+		} catch (Exception ex) {
+			System.out.println("Exception @ load all users ");
+			ex.printStackTrace();
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+			if (callable != null) {
+				callable.close();
+			}
+			if (conn != null) {
+				conn.close();
+			}
 		}
 
-    	
-    	return devices;
+		return devices;
     }
     
 	

@@ -22,4 +22,8 @@ public class Constants {
 	
 	public final static String FAILURE_FORWARD = "failure";
 	
+	public final static String DATE_FORMAT_DOB = "M/dd/yyyy";
+	
+	
+	
 }

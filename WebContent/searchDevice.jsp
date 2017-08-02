@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<%@page import="com.tracking.domain.Device"%>
+<%@page import="com.tracking.domain.DeviceDTO"%>
 <%@page import="java.util.ArrayList"%>
+<%@page import="com.tracking.domain.UserDTO"%>
 <html>
 <head>
   <meta charset="utf-8">
@@ -54,7 +55,18 @@
 </head>
 <body onload="load()" class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
+<%
+UserDTO currentUser = (UserDTO) session.getAttribute("userSession");
+String userFName = "" , userLName = "" ;
 
+if( currentUser != null ){
+	
+	userFName = currentUser.getFirstName();
+	userLName = currentUser.getLastName();
+	
+}
+
+%>
   <header class="main-header">
     <!-- Logo -->
     <a href="index2.html" class="logo">
@@ -126,7 +138,7 @@
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-              <span class="hidden-xs">Prageeth Nimshan</span>
+              <span class="hidden-xs"><%= userFName + " " + userLName %></span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
@@ -134,7 +146,7 @@
                 <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                 <p>
-                  Suwimali Bandara - Web Developer
+                  <%= userFName + " " + userLName %>
                   <small>Member since Nov. 2008</small>
                 </p>
               </li>
@@ -182,7 +194,7 @@
           <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>Prageeth Nimshan</p>
+          <p><%= userFName + " " + userLName %></p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
@@ -201,27 +213,26 @@
       <ul class="sidebar-menu">
         <li class="header">MAIN NAVIGATION</li>
          <li class="treeview">
-         
-           <li>
+       <li>
           <a href="Map1.jsp">
-            <i class="fa fa-th"></i> <span>Manage User</span>
+            <i class="fa fa-th"></i> <span>Manage Users</span>
             <small class="label pull-right bg-green"></small>
           </a>
         </li>
-        
         <li>
           <a href="ManageDevice.jsp">
-            <i class="fa fa-th"></i> <span>Manage Device</span>
+            <i class="fa fa-laptop"></i> <span>Manage Device</span>
             <small class="label pull-right bg-green"></small>
           </a>
         </li>
         
-        <li>
-          <a href="addLandMarks.jsp">
-            <i class="fa fa-th"></i> <span>Add Landmarks</span>
+       <li>
+          <a href="addLandmark.jsp">
+            <i class="fa fa-map"></i> <span>Add Landmarks</span>
             <small class="label pull-right bg-green"></small>
           </a>
         </li>
+          
         
         <li class="treeview">
           <a href="Reports.jsp">
@@ -301,13 +312,15 @@
         
       
         
-
+    <div class="col-md-9">
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#settings" data-toggle="tab">Delete</a></li>
+            </ul>
    
       
         
-        
-        <div class="col-md-10">
-          <div class="nav-tabs-custom">
+      
             
             <div class="tab-content">
               <div class="active tab-pane" id="settings">
@@ -360,9 +373,9 @@
                		// this is a scriplet 
                		/*
                		users list which is retrieved from the back end */
-               		ArrayList <Device> deviceList = (ArrayList) request.getSession().getAttribute("allDevices");
+               		ArrayList <DeviceDTO> deviceList = (ArrayList<DeviceDTO>) request.getSession().getAttribute("allDevices");
 	                if(deviceList != null){
-	                	for( Device device : deviceList ){
+	                	for( DeviceDTO device : deviceList ){
 	                    	
                		
                			
@@ -378,8 +391,8 @@
 
                 </tr>
                 
-                <%
-	                	}
+                <% }
+	                
 	                }
                		// end of for loop which iterates the users list
                 %>
@@ -411,7 +424,7 @@
           </div>
           <!-- /.nav-tabs-custom -->
         </div>
-        
+        </div>
         
        
         <!-- /.col -->

@@ -1,5 +1,6 @@
 $(document).ready(function ()
 {
+	
 });
 
 function login()
@@ -30,4 +31,38 @@ function login()
             }
         }));
     }
+}
+
+function logout(){
+	
+	console.log("loadDevices ");
+	console.log("loadDevices ");
+	console.log("loadDevices ");
+	// load the device drop down list
+	$.ajax({  
+	    type: "GET",  
+	    url: "ajaxCommands",  
+	    data: "command=logOutUser",  
+	    success: function(result){  
+	    	console.log("loadDevices ");
+	    	console.log(result);
+	    	console.log (result.DeviceArray.length);
+	    	var select = document.getElementById("device");
+	        var option1 = document.createElement("option");
+    	    option1.text = "-- Select --";
+    	    option1.value = -1;	    	    
+    	    select.add(option1);
+    	    console.log(result);
+	    	for (var i = 0; i < result.DeviceArray.length; i++) {		    	    
+	    	    var option = document.createElement("option");
+	    	    option.text = result.DeviceArray[i].description;
+	    	    option.value = result.DeviceArray[i].deviceDid;
+	    	    select.add(option);
+	    	}
+	      
+	    },failuer:function(result){
+			console.log ("failed request ");
+	    }                
+	  });
+	
 }

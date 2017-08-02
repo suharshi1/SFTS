@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<%@ page import="java.util.ArrayList"%>
+<%@page import="com.tracking.domain.UserDTO"%>
 <html>
 <head>
   <meta charset="utf-8">
@@ -40,6 +42,64 @@
 	type="text/javascript"></script>
 <script type="text/javascript">
 	function load() { 
+		console.log("load function 222 ");
+		// load the device drop down list
+		$.ajax({  
+		    type: "GET",  
+		    url: "ajaxCommands",  
+		    data: "command=loadDevices",  
+		    success: function(result){  
+		    	console.log("loadDevices ");
+		    	console.log(result);
+		    	console.log (result.DeviceArray.length);
+		    	var select = document.getElementById("device");
+		        var option1 = document.createElement("option");
+	    	    option1.text = "-- Select --";
+	    	    option1.value = -1;	    	    
+	    	    select.add(option1);
+	    	    console.log(result);
+		    	for (var i = 0; i < result.DeviceArray.length; i++) {		    	    
+		    	    var option = document.createElement("option");
+		    	    option.text = result.DeviceArray[i].description;
+		    	    option.value = result.DeviceArray[i].deviceDid;
+		    	    select.add(option);
+		    	}
+		      
+		    },failuer:function(result){
+				console.log ("failed request ");
+		    }                
+		  });
+		
+		
+		// load the role drop down list
+		$.ajax({  
+		    type: "GET",  
+		    url: "ajaxCommands",  
+		    data: "command=loadRoles",  
+		    success: function(result){  
+		    	console.log("loadRoles ");		    	
+		    	console.log(result);
+		    	console.log (result.RoleArray.length);
+		    	var select = document.getElementById("role");
+		        var option1 = document.createElement("option");
+	    	    option1.text = "-- Select --";
+	    	    option1.value = -1;	    	    
+	    	    select.add(option1);
+	    	    
+		    	for (var i = 0; i < result.RoleArray.length; i++) {		    	    
+		    	    var option = document.createElement("option");
+		    	    option.text = result.RoleArray[i].description;
+		    	    option.value = result.RoleArray[i].roleDid;
+		    	    select.add(option);
+		    	}
+		      
+		    },failuer:function(result){
+				console.log ("failed request ");
+		    }                
+		  });
+		
+		
+		
 		if (GBrowserIsCompatible()) { 
 			var map = new GMap2(document.getElementById("world-map2")); 
 			map.setCenter(new GLatLng(7.8731, 80.7718), 7); 
@@ -49,6 +109,45 @@
 		
 	} 
 </script>
+<%
+
+UserDTO currentUser = (UserDTO) session.getAttribute("userSession");
+String userFName = "" , userLName = "" ;
+
+if( currentUser != null ){
+	
+	userFName = currentUser.getFirstName();
+	userLName = currentUser.getLastName();
+	
+}
+
+
+
+int userDid = -1 ; 
+UserDTO user = (UserDTO) session.getAttribute("searchedUser");
+String firstName = "";
+String lastName = "";
+String address = "";
+String mobileNumber = "";	
+String userName = "";
+String dob = "";
+String email = "";
+String password = "";
+
+if (user != null ){
+	
+	firstName =  user.getFirstName() == null ? "" : user.getFirstName() ;
+	lastName = user.getLastName() == null ? "" : user.getLastName();
+	address = user.getAddress1() == null ? "" : user.getAddress1() ;
+	mobileNumber = user.getContactNumber() == null ? "" : user.getContactNumber() ;
+	userName = user.getUserName() == null ? "" : user.getUserName() ;
+	dob = user.getDateOfBirth() == null ? "" : user.getDateOfBirth();
+	email = user.getEmail() == null ? "" : user.getEmail()  ;
+	password = user.getPassword()  == null ? "" : user.getPassword() ;
+	userDid = user.getUserId();
+}
+
+%>
 </head>
 <body onload="load()" class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -124,7 +223,7 @@
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-              <span class="hidden-xs">Prageeth Nimshan</span>
+              <span class="hidden-xs"><%= userFName + " " + userLName %></span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
@@ -132,7 +231,7 @@
                 <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                 <p>
-                  Suwimali Bandara - Web Developer
+                  <%= userFName + " " + userLName %>
                   <small>Member since Nov. 2008</small>
                 </p>
               </li>
@@ -180,7 +279,7 @@
           <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>Prageeth Nimshan</p>
+          <p><%= userFName + " " + userLName %></p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
@@ -199,33 +298,26 @@
       <ul class="sidebar-menu">
         <li class="header">MAIN NAVIGATION</li>
          <li class="treeview">
-         
+       <li>
           <a href="Map1.jsp">
-            <i class="fa fa-files-o"></i>
-            <span>Manage Users</span>
-            <span class="label label-primary pull-right">4</span>
+            <i class="fa fa-th"></i> <span>Manage Users</span>
+            <small class="label pull-right bg-green"></small>
           </a>
         </li>
         <li>
           <a href="ManageDevice.jsp">
-            <i class="fa fa-th"></i> <span>Manage Device</span>
-            <small class="label pull-right bg-green">new</small>
+            <i class="fa fa-laptop"></i> <span>Manage Device</span>
+            <small class="label pull-right bg-green"></small>
           </a>
         </li>
         
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-pie-chart"></i>
-            <span>Add Land Marks</span>
-            <i class="fa fa-angle-left pull-right"></i>
+       <li>
+          <a href="addLandmark.jsp">
+            <i class="fa fa-map"></i> <span>Add Landmarks</span>
+            <small class="label pull-right bg-green"></small>
           </a>
-          <ul class="treeview-menu">
-            <li><a href="pages/charts/chartjs.html"><i class="fa fa-circle-o"></i>Device 1</a></li>
-            <li><a href="pages/charts/morris.html"><i class="fa fa-circle-o"></i> Device 2</a></li>
-            <li><a href="pages/charts/flot.html"><i class="fa fa-circle-o"></i> Device 3</a></li>
-            <li><a href="pages/charts/inline.html"><i class="fa fa-circle-o"></i>Device 4</a></li>
-          </ul>
         </li>
+          
         
         <li class="treeview">
           <a href="Reports.jsp">
@@ -268,12 +360,12 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Search User
+       Search Users
       </h1>
       <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Manage User</a></li>
+        <li><a href="#"><i class="fa fa-dashboard"></i> Manage Users</a></li>
         <li><a href="#">Search</a></li>
-        <li class="active">User profile</li>
+        <li class="active">User Profile</li>
       </ol>
     </section>
 
@@ -283,14 +375,9 @@
       <div class="row">
         <div class="col-md-3">
 
-          <!-- Profile Image -->
-          <div class="box box-primary">
-            <div class="box-body box-profile">
-              <img class="profile-user-img img-responsive img-circle" src="dist/img/avatar04.png">
-
-              <h3 class="profile-username text-center"></h3>
-
-              <p class="text-muted text-center"></p>
+         <!-- Profile Image -->
+          <div class="">
+   
 
               
             </div>
@@ -300,20 +387,7 @@
 
           <!-- About Me Box -->
           <div class="">
-            <div class="">
-            	<%
-            	String statusmsg = "";
-            	System.out.println(" add user page session "+ request.getSession() );
-            	if( request != null  && request.getSession() != null ){
-            		Object statusObj =  request.getSession().getAttribute("statusmsg") ;
-            		if(statusObj != null){
-            			statusmsg = statusObj.toString();
-            		}
-            	}            		
-            	
-            	%>	
-              <%= statusmsg%>
-            </div>
+          
            
             <!-- /.box-body -->
           </div>
@@ -323,131 +397,95 @@
         
       
         
-        
-        <div class="col-md-9">
+    <div class="col-md-9">
           <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
               <li class="active"><a href="#settings" data-toggle="tab">Search</a></li>
             </ul>
+   
+      
+        
+      
+            
             <div class="tab-content">
               <div class="active tab-pane" id="settings">
                 
-                <form class="form-horizontal"    action="user" method="POST">
-                
-             
-                  <div class="form-group">
-                    <label for="inputName" class="col-sm-2 control-label">Name</label>
-
-                    <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputFName" name="inputFName"  placeholder="First Name">
-                                      
-                    <div class="col-sm-4">
-                      <button type="submit" name="addUser" id ="addUser"  class="btn btn-danger">Search</button>
-                    </div>
-                    </div>
+                <form class="form-horizontal"  action ="user" method = "POST" >
+               		<input type="hidden" name="user_command" id="user_command" value="searchUser"></input>
+	             	  <div class="form-group form-group-sm">
+	                    <label for="inputName" class="col-sm-2 control-label">User Name</label>
+	                    <div class="col-sm-10">
+	                      	<div class="input-group ">
+	                    		<input type="text" class="form-control" id="searchName" name="searchName" value="<%=userName%>" placeholder="User Name" />
+					      			<span class="input-group-btn">
+					        		<button class="btn btn-sm" type="submit">Go!</button>
+					      			</span>
+					    	</div><!-- /input-group -->
+	                    </div><!-- /col-sm-10 -->                    
+	                  	</div>               
+               </form>
                     
-                  </div>
-                  <div class="form-group">
-                    <label for="inputName" class="col-sm-2 control-label"></label>
-
-                    <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputLName"  name="inputLName" placeholder="Last Name">
-                    </div>
-                    
-                  </div>
-                 
+     
                   
+                    
+                  
+                  
+                  
+                  
+                    
+                   
+                    <!--  All users table row -->
+      <div class="box">
+             <div class="box-body">
+              <table id="usertable1" class="table table-bordered table-striped">
+                <thead>
+                <tr>                  
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Address</th>
+                  <th>Email</th>
+                  <th>Contact No</th>
+                  
+                </tr>
+                </thead>
+                <tbody>
+              <% 
+               		// this is a scriplet 
+               		/*
+               		users list which is retrieved from the back end */
+               		ArrayList <UserDTO> userList = (ArrayList<UserDTO>) request.getSession().getAttribute("allUsers");
+	                if(userList != null){
+	                	for( UserDTO user1 : userList ){
+
+               %>
                
-                  <div class="form-group">
-                    <label for="inputAddress" class="col-sm-2 control-label">Address</label>
+                <tr>
+                <input type="hidden"  > </input>
+                  <td><%=user1.getFirstName()%></td>
+                  <td><%=user1.getLastName()%> </td>
+                  <td><%=user1.getAddress1()%> </td>
+                  <td><%=user1.getEmail()%> </td>
+                  <td><%=user1.getContactNumber()%> </td>
 
-                    <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputAddress"  name="inputAddress"  placeholder="Address">
-                    </div>
-                   </div>
-                   
-                   <div class="form-group">
-                    <label for="inputStreet" class="col-sm-2 control-label">Street</label>
-						<div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputStreet"  name="inputStreet"  placeholder="Street">
-                    </div>
-                   </div>
-                   
-                   <div class="form-group">
-                    <label for="inputCity" class="col-sm-2 control-label">City</label>
-						<div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputCity"  name="inputCity"  placeholder="City">
-                    </div>
-                   </div>
-                   
-                   <div class="form-group">
-                    <label for="inputSkills" class="col-sm-2 control-label">Date of Birth</label>
-
-                    <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inptDoB"  name="inptDoB"  placeholder="DD/MM/YYYY">
-                    </div>
-                  </div>
-                  
-                  <div class="form-group">
-                    <label for="inputSkills" class="col-sm-2 control-label">Role</label>
-
-                    <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputRole" name="inputRole"  placeholder="Role">
-                    </div>
-                  </div>
-                  
-                    <div class="form-group">
-                    <label for="inputSkills" class="col-sm-2 control-label">Contact No</label>
-
-                    <div class="col-sm-10">
-                      <input type="number" class="form-control" id="inputContactNo" name="inputContactNo"  placeholder="Contact Number">
-                    </div>
-                  </div>
-                  
-                     <div class="form-group">
-                    <label for="inputEmail" class="col-sm-2 control-label">Email</label>
-
-                    <div class="col-sm-10">
-                      <input type="email" class="form-control" id="inputEmail"  name="inputEmail"  placeholder="Email">
-                    </div>
-                  </div>
-                  
-                  
-                  <div class="form-group">
-                    <label for="inputUserName" class="col-sm-2 control-label">User Name</label>
-
-                    <div class="col-sm-10">
-                      <input type="text" name="userName" id="userName" class="form-control" placeholder="User Name">
-                    </div>
-                  </div>
-                  
-                  <div class="form-group">
-                    <label for="inputName" class="col-sm-2 control-label">Password</label>
-
-                    <div class="col-sm-10">
-                      <input type="password" name="password" class="form-control" placeholder="Password">
-                    </div>
-                  </div>
-                  
-                  
-                  <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                      <div class="checkbox">
-                        <label>
-                          <input type="checkbox"> I agree to the <a href="#">terms and conditions</a>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                    <input type="hidden" id="actionCommand" name ="actionCommand" value="addUser">
-                    
-                  <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                      <button type="submit" name="addUser" id ="addUser"  class="btn btn-danger">Search</button>
-                    </div>
-                  </div>
-                  
-                  
+                </tr>
+                
+                <%
+	                	}
+	                }
+               		// end of for loop which iterates the users list
+                %>
+                
+              
+                </tbody>
+                <tfoot>
+               
+                </tfoot>
+              </table>
+            
+            <!-- /.box-body -->
+          </div>
+          
+                
                    </form>
                   
               
@@ -458,7 +496,7 @@
           </div>
           <!-- /.nav-tabs-custom -->
         </div>
-        
+        </div>
         
        
         <!-- /.col -->
@@ -683,6 +721,16 @@
 <script src="dist/js/app.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
+
+<!-- DataTables -->
+<script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script>
+  $(function () {
+    $("#usertable1").DataTable();
+   
+  });
+</script>
 </body>
 
 

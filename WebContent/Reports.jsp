@@ -1,6 +1,14 @@
+<%@ page language="java" contentType="text/html; charset=US-ASCII"
+    pageEncoding="US-ASCII"%>
+
 <!DOCTYPE html>
 <html>
+
+<%@ page import="java.util.ArrayList"%>
+<%@page import="com.tracking.domain.UserDTO"%>
 <head>
+
+
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Admin| Dashboard</title>
@@ -48,10 +56,53 @@
 		} 	
 		
 	} 
+	
+	/*
+	
+	google.load('visualization', '1', { 'packages': ['geomap'] });
+    google.setOnLoadCallback(drawMap);
+
+    function drawMap() {
+        var data = google.visualization.arrayToDataTable([
+          ['City', 'Popularity'],
+          ['New York', 200],
+          ['Boston', 300],
+          ['Miami', 400],
+          ['Chicago', 500],
+          ['Los Angeles', 600],
+          ['Houston', 700]
+        ]);
+
+        var options = {};
+        options['region'] = 'US';
+        options['colors'] = [0xFF8747, 0xFFB581, 0xc06000]; //orange colors
+        options['dataMode'] = 'markers';
+        options['width'] = '556px';
+
+        var container = document.getElementById('map_canvas');
+        var geomap = new google.visualization.GeoMap(container);
+        geomap.draw(data, options);
+    };
+	
+	*/
+	
 </script>
 </head>
 <body onload="load()" class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
+
+<%
+UserDTO currentUser = (UserDTO) session.getAttribute("userSession");
+String userFName = "" , userLName = "" ;
+
+if( currentUser != null ){
+	
+	userFName = currentUser.getFirstName();
+	userLName = currentUser.getLastName();
+	
+}
+
+%>
 
   <header class="main-header">
     <!-- Logo -->
@@ -124,7 +175,7 @@
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-              <span class="hidden-xs">Prageeth Nimshan</span>
+              <span class="hidden-xs"> <%= userFName + " " + userLName %></span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
@@ -132,7 +183,7 @@
                 <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                 <p>
-                  Prageeth Nimshan - Web Developer
+                   <%= userFName + " " + userLName %>
                   <small>Member since Nov. 2012</small>
                 </p>
               </li>
@@ -180,7 +231,7 @@
           <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>Prageeth Nimshan</p>
+          <p> <%= userFName + " " + userLName %></p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
@@ -200,46 +251,32 @@
         <li class="header">MAIN NAVIGATION</li>
          <li class="treeview">
          
+         <li>
           <a href="Map1.jsp">
-            <i class="fa fa-files-o"></i>
-            <span>Manage Users</span>
-            <span class="label label-primary pull-right">4</span>
+            <i class="fa fa-th"></i> <span>Manage Users</span>
+            <small class="label pull-right bg-green"></small>
           </a>
         </li>
-        
-        <li class="treeview">
-          <a href="ManageDevice.jsp">
-            <i class="fa fa-pie-chart"></i>
-            <span>Manage Device</span>
-            <i class="fa fa-angle-left pull-right"></i>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="pages/charts/chartjs.html"><i class="fa fa-circle-o"></i>Device 1</a></li>
-            <li><a href="pages/charts/morris.html"><i class="fa fa-circle-o"></i> Device 2</a></li>
-            <li><a href="pages/charts/flot.html"><i class="fa fa-circle-o"></i> Device 3</a></li>
-            <li><a href="pages/charts/inline.html"><i class="fa fa-circle-o"></i>Device 4</a></li>
-          </ul>
-        </li>
-        
         <li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-th"></i> <span>Add Land Marks </span>
-            <small class="label pull-right bg-green">new</small>
+          <a href="ManageDevice.jsp">
+            <i class="fa fa-laptop"></i> <span>Manage Device</span>
+            <small class="label pull-right bg-green"></small>
           </a>
         </li>
-               
-        <li class="active treeview">
-          <a href="Reports.jsp">
-            <i class="fa fa-dashboard"></i> 
-            <span>Reports</span> 
-            <i class="fa fa-angle-left pull-right"></i>
+        
+       <li>
+          <a href="addLandmark.jsp">
+            <i class="fa fa-map"></i> <span>Add Landmarks</span>
+            <small class="label pull-right bg-green"></small>
           </a>
-          <ul class="treeview-menu">
-            <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> User Wise</a></li>
-            <li><a href="index2.html"><i class="fa fa-circle-o"></i>Date Wise</a></li>
-            <li><a href="index2.html"><i class="fa fa-circle-o"></i>Month Wise</a></li>
-            <li><a href="index2.html"><i class="fa fa-circle-o"></i>Device Status</a></li>
-          </ul>
+        </li>
+          
+        
+       <li>
+          <a href="Reports.jsp">
+            <i class="fa fa-dashboard"></i> <span>Reports</span>
+             <small class="label pull-right bg-green"></small>
+          </a>
         </li>  
         
         <li>
@@ -272,33 +309,21 @@
     <section class="content-header">
       <h1>
         Dashboard
-        <small>Reports</small>
+        <small>Report</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Reports</li>
+        <li class="active">Report</li>
       </ol>
     </section>
 
     <!-- Main content -->
     <section class="content">
-      <!-- Small boxes (Stat box) -->
-      <div class="row">
-       
-        <!-- ./col -->
-        
-        <!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-        
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-          
-        </div>
-        <!-- ./col -->
-      </div>
+      
+   
+      
+      <!--   -->
+      
       <!-- /.row -->
       <!-- Main row -->
       <div class="row">
@@ -311,20 +336,36 @@
           </section>
         <section class="col-lg-8 connectedSortable">
 
-                        
-              </div>
           <!-- Map box -->
           
+            <div class="box-header">
               <!-- tools box -->
               <div class="pull-right box-tools">
-            
+                <button type="button" class="btn btn-primary btn-sm daterange pull-right" data-toggle="tooltip" title="Date range">
+                  <i class="fa fa-calendar"></i></button>
+                
               </div>
-              
               <!-- /. tools -->
 
-             
+              <i class="fa fa-calendar"></i>
+
+              <h3 class="box-title">
+               <a href="#">Date range Reports  </a>             </h3>
+            </div>
+              <div class="box-header">
+         <i class="fa fa-dashboard"></i>
+
+              <h3 class="box-title">
+               <a href="UserReport.jsp">User wise Reports </a>               </h3>
+            </div>
+            <div class="box-header">
+         <i class="fa fa-laptop"></i>
+
+              <h3 class="box-title">
+          <a href="DeviceReport.jsp">     Device wise Reports </a>                </h3>
+            </div>
             <!-- /.box-body-->
-            <div class="box-footer no-border">
+
               <div class="row">
                 
                 <!-- ./col -->
@@ -345,7 +386,7 @@
           
            
             <!-- /.box-body -->
-            <div class="box-footer no-border">
+           
               <div class="row">
                 
                 <!-- ./col -->
@@ -362,66 +403,6 @@
           </div>
           <!-- /.box -->
 
-    <!-- Calendar -->
-          <div class="box box-solid bg-green-gradient">
-            <div class="box-header">
-              <i class="fa fa-calendar"></i>
-
-              <h3 class="box-title">Calendar</h3>
-              <!-- tools box -->
-              <div class="pull-right box-tools">
-                <!-- button with a dropdown -->
-                  
-                <div class="btn-group">
-                <button type="button" class="btn btn-primary btn-sm daterange pull-right" data-toggle="tooltip" title="Date range">
-                  <i class="fa fa-calendar"></i></button>    
- 
-              
-                  <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
-                    <i class="fa fa-bars"></i></button>
-                  <ul class="dropdown-menu pull-right" role="menu">
-                    <li><a href="#">Add new event</a></li>
-                    <li><a href="#">Clear events</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">View calendar</a></li>
-                  </ul>
-                </div>
-                <button type="button" class="btn btn-success btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
-                </button>
-                <button type="button" class="btn btn-success btn-sm" data-widget="remove"><i class="fa fa-times"></i>
-                </button>
-              </div>
-              <!-- /. tools -->
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body no-padding">
-              <!--The calendar -->
-              <div id="calendar" style="width: 100%"></div>
-            </div>
-            <!-- /.box-body -->
-            <div class="box-footer text-black">
-              <div class="row">
-                <div class="col-sm-6">
-                  <!-- Progress bars -->
-                 
-               
-
-                </div>
-                <!-- /.col -->
-                <div class="col-sm-6">
-                  
-                
-
-                  <div class="clearfix">
-                   
-                  </div>
-                
-                </div>
-                <!-- /.col -->
-              </div>
-              <!-- /.row -->
-            </div>
-          </div>
 
 <!-- quick email widget -->
           <div class="box box-info">
@@ -459,7 +440,7 @@
 	
 
 
-      
+
           <!-- /.box -->
 
         </section>

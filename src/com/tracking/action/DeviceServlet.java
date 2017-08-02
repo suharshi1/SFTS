@@ -1,7 +1,7 @@
 package com.tracking.action;
 
-import com.tracking.domain.Device;
-import com.tracking.domain.User;
+import com.tracking.domain.DeviceDTO;
+import com.tracking.domain.UserDTO;
 import com.tracking.connectivity.DeviceDAO;
 import com.tracking.connectivity.UserDAO;
 import com.tracking.token.Token.*;
@@ -85,30 +85,23 @@ public class DeviceServlet extends HttpServlet {
 
 		if (Constants.COMMAND_SEARCH_DEVICE.equals(userCommand)) {
 			String deviceId = request.getParameter("searchDevice");
-			String fromPage = request.getParameter("from_page");
-			
-			
-			
+			String fromPage = request.getParameter("fromPage");
 			if (SFTSUtil.isNotEmpty(deviceId)) {
 				System.out.println(" DeviceServlet device search ");
-				Device device = new Device();
+				DeviceDTO device = new DeviceDTO();
 				device.setDeviceId(deviceId);
-				Device deviceSearch = null;
+				DeviceDTO deviceSearch = null;
 				try {
 					deviceSearch = new DeviceDAO().searchDevice(device);
 				} catch (SQLException e) {
-					System.out.println("exception in search user ");
+					System.out.println("exception in search device ");
 				}
 				request.getSession().setAttribute("searchedDevice", deviceSearch);
 				HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-				
-				if(SFTSUtil.isNotEmpty(fromPage) && fromPage.equals("deletePage")){
+				if (SFTSUtil.isNotEmpty(fromPage)&& fromPage.equals("deletePage"))  {
 					httpServletResponse.sendRedirect(request.getContextPath()+ "/deleteDevice.jsp");
-				}else {
-					httpServletResponse.sendRedirect(request.getContextPath()+ "/updateDevice.jsp");
-				}
-				
-				
+				}else
+				httpServletResponse.sendRedirect(request.getContextPath()+ "/updateDevice.jsp");
 				
 			}
 		} else {
@@ -116,7 +109,7 @@ public class DeviceServlet extends HttpServlet {
 			if (Constants.COMMAND_ADD_DEVICE.equals(userCommand)) {
 				System.out.println("device command in DeviceServlet is "+ userCommand);
 
-				Device device = getDevide(request);
+				DeviceDTO device = getDevide(request);
 
 				if (!DeviceValidator.isValidDevice(device)) {
 					System.out.println(" DeviceValidator device invalid ");
@@ -147,7 +140,7 @@ public class DeviceServlet extends HttpServlet {
 					}
 				}
 			} else if (Constants.COMMAND_UPDATE_DEVICE.equals(userCommand)) {
-				Device device = getDevide(request);
+				DeviceDTO device = getDevide(request);
 
 				System.out.println("populated user information @ update " + device);
 				if (!DeviceValidator.isValidDevice(device)) {
@@ -177,9 +170,9 @@ public class DeviceServlet extends HttpServlet {
 					}
 				}
 
-			} else if (Constants.COMMAND_DELETE_USER.equals(userCommand)) {
+			} else if (Constants.COMMAND_DELETE_DEVICE.equals(userCommand)) {
 				// delete existing user
-				Device device = getDevide(request);
+				DeviceDTO device = getDevide(request);
 
 				if (!DeviceValidator.isValidDevice(device)) {
 					HttpServletResponse httpServletResponse = (HttpServletResponse) response;
@@ -189,15 +182,16 @@ public class DeviceServlet extends HttpServlet {
 						System.out.println(" DeviceServlet user valid ");
 
 						int delete = deviceDAO.deleteDevice(device);
-						System.out.println("add successful ? --------------   "	+ delete);
+						System.out.println("delete successful ? --------------   "	+ delete);
 
 						if (delete == 1) {
-							// user added successfully
+
 							HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 							request.getSession().setAttribute("statusmsg","Device deletion success !");
-							httpServletResponse.sendRedirect(request.getContextPath() + "/updateUser.jsp");
+							request.getSession().setAttribute("deletedDevice", device);
+							httpServletResponse.sendRedirect(request.getContextPath() + "/deleteDevice.jsp");
 						}  else {
-							request.getSession().setAttribute("statusmsg","Device update faliure !");
+							request.getSession().setAttribute("statusmsg","Device delete  faliure !");
 						}
 
 					} catch (Exception e) {
@@ -209,9 +203,9 @@ public class DeviceServlet extends HttpServlet {
 		}
 	}
 
-	private Device getDevide(HttpServletRequest request) {
+	private DeviceDTO getDevide(HttpServletRequest request) {
 
-		Device device = new Device();
+		DeviceDTO device = new DeviceDTO();
 
 		String deviceId = request.getParameter("deviceId") == null ? null: request.getParameter("deviceId").trim();
 		String imei = request.getParameter("IMEI") == null ? null : request.getParameter("IMEI").trim();

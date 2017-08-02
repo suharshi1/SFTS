@@ -206,5 +206,10 @@ $(function () {
       return ele;
     }
   });
+  
+  
+  $( "#signoutBtn" ).bind( "click", function() {
+	  alert( "User clicked on 'foo.'" );
+	});
 
 });

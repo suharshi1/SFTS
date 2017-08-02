@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
 import com.tracking.token.MessageToken;
 import com.tracking.token.Token;
 import com.tracking.connectivity.UserDAO;
-import com.tracking.domain.User;
+import com.tracking.domain.UserDTO;
 
 
 public class EntityFacade extends HttpServlet {
@@ -30,12 +30,12 @@ public class EntityFacade extends HttpServlet {
     	 protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     	            throws ServletException, IOException,  ParseException 
     	 {
-    	       User user = null;
+    	       UserDTO user = null;
     		 	HttpSession session = request.getSession(true);
     	        HttpSession httpSession = request.getSession(true);
     	        Token token = null;
     	        if (session != null) {
-    	            user = (User) session.getAttribute("userSession");
+    	            user = (UserDTO) session.getAttribute("userSession");
     	            if (user == null) {
 //    	                response.sendRedirect(request.getServletContext().getContextPath() + "/signin.jsp");
     	            }
@@ -51,7 +51,7 @@ public class EntityFacade extends HttpServlet {
     	            
     	 case Add:
     		    strObject = request.getParameter("data");
-    		    User user1 = new UserDAO().login(user);
+    		    UserDTO user1 = new UserDAO().login(user);
     		    HttpSession httpSession1 = request.getSession(true);
     		    httpSession1.setAttribute("userSession", user1);
     	//	    httpSession1.setAttribute("user_name", user1.getUsername());

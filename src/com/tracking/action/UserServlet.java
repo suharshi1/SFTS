@@ -5,35 +5,19 @@
  */
 package com.tracking.action;
 
-import com.tracking.domain.Device;
-import com.tracking.domain.User;
-import com.tracking.connectivity.DeviceDAO;
+import com.tracking.domain.DeviceDTO;
+import com.tracking.domain.UserDTO;
 import com.tracking.connectivity.UserDAO;
-import com.tracking.token.Token.*;
 import com.tracking.utils.Constants;
 import com.tracking.utils.SFTSUtil;
 import com.tracking.utils.UserValidator;
-
 import java.io.IOException;
-import java.io.PrintWriter;
-
 import com.tracking.token.*;
-
-import java.util.Date;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 public class UserServlet extends HttpServlet {
 
@@ -44,18 +28,19 @@ public class UserServlet extends HttpServlet {
 		System.out.println("Process request @ User servlet ");
 
 		String userCommand = request.getParameter("user_command");
-
+		
 		System.out.println("user command in UserServlet is " + userCommand);
 
 		if (Constants.COMMAND_SEARCH_USER.equals(userCommand)) { // Search Functionality
 			// update existing user
 			String userName = request.getParameter("searchName");
+			String fromPage = request.getParameter("fromPage");
 			if (SFTSUtil.isNotEmpty(userName)) {
 
 				System.out.println(" UserServlet user search ");
-				User user = new User();
+				UserDTO user = new UserDTO();
 				user.setUserName(userName);
-				User userSearch = null;
+				UserDTO userSearch = null;
 				try {
 					userSearch = new UserDAO().searchUser(user);
 				} catch (SQLException e) {
@@ -63,8 +48,10 @@ public class UserServlet extends HttpServlet {
 				}
 				request.getSession().setAttribute("searchedUser", userSearch);
 				HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-				httpServletResponse.sendRedirect(request.getContextPath()
-						+ "/updateUser.jsp");
+				if (SFTSUtil.isNotEmpty(fromPage)&& fromPage.equals("deletePage"))  {
+					httpServletResponse.sendRedirect(request.getContextPath()+ "/deleteUser.jsp");
+				}else
+				httpServletResponse.sendRedirect(request.getContextPath()+ "/updateUser.jsp");
 			}
 		} else { // Add , Update , Delete
 			String fName = request.getParameter("inputFName");
@@ -74,8 +61,8 @@ public class UserServlet extends HttpServlet {
 			String street = request.getParameter("inputStreet");
 			String city = request.getParameter("inputCity");
 
-			String dob = request.getParameter("inputDoB");
-			String role = request.getParameter("inputRole");
+			String dob = request.getParameter("datepicker");
+			String role = request.getParameter("role");
 			String contactNo = request.getParameter("inputContactNo");
 			String email = request.getParameter("inputEmail");
 			String password = request.getParameter("password");
@@ -83,7 +70,7 @@ public class UserServlet extends HttpServlet {
 			// String role = request.getParameter("roleUser");
 			int deviceDid = -1;
 
-			String deviceDidStr = request.getParameter("deviceDid");
+			String deviceDidStr = request.getParameter("device");
 			if (SFTSUtil.isNotEmpty(deviceDidStr)) {
 				try {
 					deviceDid = Integer.parseInt(deviceDidStr);
@@ -93,27 +80,17 @@ public class UserServlet extends HttpServlet {
 			}
 			// receive the select elements value
 
-			Device device = null;
+			DeviceDTO device = null;
 			if (deviceDid > 0) {
-				device = new Device();
+				device = new DeviceDTO();
 				device.setDeviceDid(deviceDid);
 			}
 
-			User user = new User();
+			UserDTO user = new UserDTO();
 			user.setFirstName(fName);
 			user.setLastName(lName);
 			user.setAddress1(address1);
-			user.setAddress2(address2);
-			Date date1 = null;
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
-			try {
-				date1 = df.parse(dob);
-			} catch (ParseException e1) {
-				date1 = null;
-			} catch (Exception e) {
-				date1 = null;
-			}
+			user.setAddress2(address2);			
 			user.setDateOfBirth(dob);
 			user.setPassword(password);
 			user.setEmail(email);
@@ -148,12 +125,11 @@ public class UserServlet extends HttpServlet {
 							+ "/addUser.jsp");
 				} else {
 					try {
-						System.out.println(" UserServlet user valid ");
+						System.out.println("UserServlet user valid");
 						// save the user
 						int add = new UserDAO().addUser(user);
-						System.out.println("add successful ? --------------   "
-								+ add);
-						System.out.println("");
+						System.out.println("add successful ? --------------   "+ add);
+						
 						if (add == 1) {
 							// user added successfully
 							HttpServletResponse httpServletResponse = (HttpServletResponse) response;
@@ -210,8 +186,8 @@ public class UserServlet extends HttpServlet {
 				}
 
 			} else if (Constants.COMMAND_DELETE_USER.equals(userCommand)) {
-				// update existing user
-				String existingDid = request.getParameter("userId"); // existing userdid PK
+		
+				String existingDid = request.getParameter("userDid"); // existing userdid PK
 				if(SFTSUtil.isNotEmpty(existingDid)){
 					user.setUserId(Integer.parseInt(existingDid));
 				}
@@ -226,7 +202,7 @@ public class UserServlet extends HttpServlet {
 						System.out.println(" UserServlet user valid ");
 						// update the user
 						int delete = new UserDAO().deleteUser(user);
-						System.out.println("add successful ? --------------   "+ delete);
+						System.out.println("delete successful ? --------------   "+ delete);
 						
 						if (delete == 1) {
 						

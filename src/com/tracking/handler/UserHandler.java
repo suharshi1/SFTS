@@ -2,13 +2,13 @@ package com.tracking.handler;
 
 import java.sql.SQLException;
 
-import com.tracking.domain.User;
+import com.tracking.domain.UserDTO;
 import com.tracking.connectivity.UserDAO;
 
 public class UserHandler {
 
 	
-	public int addUser(User user){
+	public int addUser(UserDTO user){
 		int add =-1;
 		try {
 			add = new UserDAO().addUser(user);

@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html>
+
+<%@ page import="java.util.ArrayList"%>
+<%@page import="com.tracking.domain.UserDTO"%>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,6 +19,8 @@
   <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
+ <!-- bootstrap datepicker -->
+  <link rel="stylesheet" href="plugins/datepicker/datepicker3.css">
   <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
   <!-- iCheck -->
   <link rel="stylesheet" href="plugins/iCheck/flat/blue.css">
@@ -23,10 +28,6 @@
   <link rel="stylesheet" href="plugins/morris/morris.css">
   <!-- jvectormap -->
   <link rel="stylesheet" href="plugins/jvectormap/jquery-jvectormap-1.2.2.css">
-  <!-- Date Picker -->
-  <link rel="stylesheet" href="plugins/datepicker/datepicker3.css">
-  <!-- Daterange picker -->
-  <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker-bs3.css">
   <!-- bootstrap wysihtml5 - text editor -->
   <link rel="stylesheet" href="plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
 
@@ -40,19 +41,90 @@
 	type="text/javascript"></script>
 <script type="text/javascript">
 	function load() { 
+		
+	
+		
+		console.log("load function 222 ");
+		// load the device drop down list
+		$.ajax({  
+		    type: "GET",  
+		    url: "ajaxCommands",  
+		    data: "command=loadDevices",  
+		    success: function(result){  
+		    	console.log("loadDevices ");
+		    	console.log(result);
+		    	console.log (result.DeviceArray.length);
+		    	var select = document.getElementById("device");
+		        var option1 = document.createElement("option");
+	    	    option1.text = "-- Select --";
+	    	    option1.value = -1;	    	    
+	    	    select.add(option1);
+	    	    console.log(result);
+		    	for (var i = 0; i < result.DeviceArray.length; i++) {		    	    
+		    	    var option = document.createElement("option");
+		    	    option.text = result.DeviceArray[i].description;
+		    	    option.value = result.DeviceArray[i].deviceDid;
+		    	    select.add(option);
+		    	}
+		      
+		    },failuer:function(result){
+				console.log ("failed request ");
+		    }                
+		  });
+		
+		
+		// load the role drop down list
+		$.ajax({  
+		    type: "GET",  
+		    url: "ajaxCommands",  
+		    data: "command=loadRoles",  
+		    success: function(result){  
+		    	console.log("loadRoles ");		    	
+		    	console.log(result);
+		    	console.log (result.RoleArray.length);
+		    	var select = document.getElementById("role");
+		        var option1 = document.createElement("option");
+	    	    option1.text = "-- Select --";
+	    	    option1.value = -1;	    	    
+	    	    select.add(option1);
+	    	    
+		    	for (var i = 0; i < result.RoleArray.length; i++) {		    	    
+		    	    var option = document.createElement("option");
+		    	    option.text = result.RoleArray[i].description;
+		    	    option.value = result.RoleArray[i].roleDid;
+		    	    select.add(option);
+		    	}
+		      
+		    },failuer:function(result){
+				console.log ("failed request ");
+		    }                
+		  });
+		
+	
+		// map script has to be written as last section of load function
 		if (GBrowserIsCompatible()) { 
 			var map = new GMap2(document.getElementById("world-map2")); 
 			map.setCenter(new GLatLng(7.8731, 80.7718), 7); 
 			map.addControl(new GSmallMapControl()); 
 			map.addControl(new GOverviewMapControl());
 		} 	
-		
 	} 
 </script>
 </head>
 <body onload="load()" class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
+<%
+UserDTO currentUser = (UserDTO) session.getAttribute("userSession");
+String userFName = "" , userLName = "" ;
 
+if( currentUser != null ){
+	
+	userFName = currentUser.getFirstName();
+	userLName = currentUser.getLastName();
+	
+}
+
+%>
   <header class="main-header">
     <!-- Logo -->
     <a href="index2.html" class="logo">
@@ -124,7 +196,7 @@
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-              <span class="hidden-xs">Prageeth Nimshan</span>
+              <span class="hidden-xs"><%= userFName + " " + userLName %></span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
@@ -132,7 +204,7 @@
                 <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                 <p>
-                  Suwimali Bandara - Web Developer
+                  <%= userFName + " " + userLName %>
                   <small>Member since Nov. 2008</small>
                 </p>
               </li>
@@ -180,7 +252,7 @@
           <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>Prageeth Nimshan</p>
+          <p><%= userFName + " " + userLName %></p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
@@ -199,34 +271,26 @@
       <ul class="sidebar-menu">
         <li class="header">MAIN NAVIGATION</li>
          <li class="treeview">
-         
+          <li>
           <a href="Map1.jsp">
-            <i class="fa fa-files-o"></i>
-            <span>Manage Users</span>
-            <span class="label label-primary pull-right">4</span>
+            <i class="fa fa-th"></i> <span>Manage Users</span>
+            <small class="label pull-right bg-green"></small>
           </a>
         </li>
         <li>
           <a href="ManageDevice.jsp">
-            <i class="fa fa-th"></i> <span>Manage Device</span>
-            <small class="label pull-right bg-green">new</small>
+            <i class="fa fa-laptop"></i> <span>Manage Device</span>
+            <small class="label pull-right bg-green"></small>
           </a>
         </li>
         
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-pie-chart"></i>
-            <span>Add Land Marks</span>
-            <i class="fa fa-angle-left pull-right"></i>
+       <li>
+          <a href="addLandmark.jsp">
+            <i class="fa fa-map"></i> <span>Add Landmarks</span>
+            <small class="label pull-right bg-green"></small>
           </a>
-          <ul class="treeview-menu">
-            <li><a href="pages/charts/chartjs.html"><i class="fa fa-circle-o"></i>Device 1</a></li>
-            <li><a href="pages/charts/morris.html"><i class="fa fa-circle-o"></i> Device 2</a></li>
-            <li><a href="pages/charts/flot.html"><i class="fa fa-circle-o"></i> Device 3</a></li>
-            <li><a href="pages/charts/inline.html"><i class="fa fa-circle-o"></i>Device 4</a></li>
-          </ul>
         </li>
-        
+          
         <li class="treeview">
           <a href="Reports.jsp">
             <i class="fa fa-dashboard"></i> <span>Reports</span>
@@ -378,10 +442,16 @@
                    
                    <div class="form-group">
                     <label for="inputSkills" class="col-sm-2 control-label">Date of Birth</label>
-
-                    <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inptDoB"  name="inptDoB"  placeholder="DD/MM/YYYY">
-                    </div>
+				<div class="col-sm-10">
+                <div class="input-group date">
+                  <div class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                  </div>
+                  <input type="text" class="form-control pull-right" id="datepicker" name ="datepicker">
+                </div>
+                </div>
+                <!-- /.input group -->
+           
                   </div>
                   
                   <div class="form-group">
@@ -390,10 +460,20 @@
                     <div class="col-sm-10">
                       <!--  <input type="text" class="form-control" id="inputRole" name="inputRole"  placeholder="Role">  -->
                       
-                      <select class="form-control select1"  style="width: 100%;">
-                       	  <option value="-1">-- Select -- </option>
-		                  <option value="1">Admin</option>
-		                  <option value="2">Sales Executive</option>		                 
+                      <select id="role" name="role" class="form-control select1"  style="width: 100%;">
+                       	  		                 
+	                  </select>
+                    </div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="inputSkills" class="col-sm-2 control-label">Device</label>
+
+                    <div class="col-sm-10">
+                      <!--  <input type="text" class="form-control" id="inputRole" name="inputRole"  placeholder="Role">  -->
+                      
+                      <select id="device" name="device" class="form-control select1"  style="width: 100%;">
+                       	  		                 
 	                  </select>
                     </div>
                   </div>
@@ -431,21 +511,10 @@
                     </div>
                   </div>
                   
-                  
-                  <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                      <div class="checkbox">
-                        <label>
-                          <input type="checkbox"> I agree to the <a href="#">terms and conditions</a>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                    
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                     	<input type="hidden" name="user_command" id="user_command" value="addUser"></input>
-                      <button type="submit" name="addUser" id ="addUser"  class="btn btn-success">Submit</button>
+                      <button type="submit" name="addUser" id ="addUser"  class="btn btn-success">Add User</button>
                     </div>
                   </div>
                   
@@ -685,6 +754,17 @@
 <script src="dist/js/app.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
+<!-- bootstrap datepicker -->
+<script src="plugins/datepicker/bootstrap-datepicker.js"></script>
+
+<script>
+$(function () {
+ //Date picker
+    $('#datepicker').datepicker({
+      autoclose: true
+    });
+});
+</script>
 </body>
 
 
